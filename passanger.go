@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -49,5 +51,43 @@ func getPassanger(id string) ([]Passanger, error) {
 		}
 	} else {
 		return nil, err
+	}
+}
+
+func createPassanger(passanger Passanger) error {
+	client := &http.Client{}
+	postBody, _ := json.Marshal(passanger)
+	resBody := bytes.NewBuffer(postBody)
+	if req, err := http.NewRequest(http.MethodPost, "http://localhost:5000/api/v1/passanger", resBody); err == nil {
+		if res, err := client.Do(req); err == nil {
+			if res.StatusCode == http.StatusAccepted {
+				return nil
+			} else {
+				return nil
+			}
+		} else {
+			return err
+		}
+	} else {
+		return err
+	}
+}
+
+func updatePassanger(passanger Passanger) error {
+	client := &http.Client{}
+	postBody, _ := json.Marshal(passanger)
+	resBody := bytes.NewBuffer(postBody)
+	if req, err := http.NewRequest(http.MethodPut, fmt.Sprint("http://localhost:5000/api/v1/passanger/", passanger.Passanger_Id), resBody); err == nil {
+		if res, err := client.Do(req); err == nil {
+			if res.StatusCode == http.StatusAccepted {
+				return nil
+			} else {
+				return nil
+			}
+		} else {
+			return err
+		}
+	} else {
+		return err
 	}
 }

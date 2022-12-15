@@ -19,12 +19,14 @@ func main() {
 			option := menu()
 			if option == "999" {
 				return
+			} else if option == "000" {
+				continue
 			} else if option == "777" {
 				createUserPassanger()
-				return
+				continue
 			} else if option == "888" {
 				createUserDriver()
-				return
+				continue
 			}
 			tempUserId, err := confirmUser(option)
 			if err != nil {
@@ -119,6 +121,7 @@ func menu() string {
 	w.Flush()
 
 	fmt.Println()
+	fmt.Println("000. Refresh")
 	fmt.Println("777. Create Passanger")
 	fmt.Println("888. Create Driver")
 	fmt.Println("999. Quit")
@@ -175,7 +178,7 @@ func createUserPassanger() {
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
 		err := createPassanger(Passanger{First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo})
 		if err == nil {
-			fmt.Println("Trip successfully created")
+			fmt.Println("Passanger successfully created")
 		} else {
 			fmt.Println("Error occured while creating trip")
 		}
@@ -240,9 +243,9 @@ func createUserDriver() {
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
 		err := createDriver(Driver{First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo, Id_No: idNo, Car_No: carNo})
 		if err == nil {
-			fmt.Println("Driver successfully updated")
+			fmt.Println("Driver successfully created")
 		} else {
-			fmt.Println("Error occured while updating driver")
+			fmt.Println("Error occured while creating driver")
 		}
 	}
 }
@@ -306,14 +309,22 @@ func menuPassanger() string {
 	}
 	for _, v := range tripAssignments {
 		fmt.Printf("\nTrip Id: %d\n", v.Trip_Id)
-		fmt.Printf("Driver: (%d) %s %s\n", v.Driver_Id, v.First_Name, v.Last_Name)
-		fmt.Printf("Mobile No: %s\n", v.Mobile_No)
-		fmt.Printf("Car No: %s\n", v.Car_No)
-		fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
-		fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
-		fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
-		fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
-		fmt.Printf("Status: %s\n", v.Status)
+		if !v.Driver_Id.Valid {
+			fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
+			fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
+			fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
+			fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
+			fmt.Printf("Status: ASSIGNING...\n")
+		} else {
+			fmt.Printf("Driver: (%s) %s %s\n", processSQLNullInt(v.Driver_Id), processSQLNullString(v.First_Name), processSQLNullString(v.Last_Name))
+			fmt.Printf("Mobile No: %s\n", processSQLNullString(v.Mobile_No))
+			fmt.Printf("Car No: %s\n", processSQLNullString(v.Car_No))
+			fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
+			fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
+			fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
+			fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
+			fmt.Printf("Status: %s\n", processSQLNullString(v.Status))
+		}
 	}
 
 	fmt.Println("\n 000. Refresh Data")
@@ -556,13 +567,6 @@ func updateInformationDriver() {
 		return
 	}
 
-	fmt.Printf("Identification No (%s): ", onlyDriver.Id_No)
-	scanner.Scan()
-	idNo := scanner.Text()
-	if strings.ToLower(idNo) == "esc" {
-		return
-	}
-
 	fmt.Printf("Car No (%s): ", onlyDriver.Car_No)
 	scanner.Scan()
 	carNo := scanner.Text()
@@ -578,7 +582,7 @@ func updateInformationDriver() {
 	}
 
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
-		err := updateDriver(Driver{Driver_Id: onlyDriver.Driver_Id, First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo, Id_No: idNo, Car_No: carNo})
+		err := updateDriver(Driver{Driver_Id: onlyDriver.Driver_Id, First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo, Car_No: carNo})
 		if err == nil {
 			fmt.Println("Driver successfully updated")
 		} else {
@@ -628,6 +632,14 @@ func updateUserDriverAvailability() {
 		} else {
 			fmt.Println("Error occured while updating driver")
 		}
+	}
+}
+
+func processSQLNullInt(data sql.NullInt32) string {
+	if data.Valid {
+		return strconv.Itoa(int(data.Int32))
+	} else {
+		return "-"
 	}
 }
 

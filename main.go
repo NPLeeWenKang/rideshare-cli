@@ -52,7 +52,9 @@ func main() {
 			} else if userType == "d" {
 				option := menuDriver()
 				if option == "1" {
-
+					updateInformationDriver()
+				} else if option == "2" {
+					updateUserDriverAvailability()
 				} else if option == "999" {
 					userId = ""
 				} else {
@@ -418,7 +420,8 @@ func menuDriver() string {
 	fmt.Printf("Email: %s\n", onlyDriver.Email)
 	fmt.Printf("Mobile No: %s\n", onlyDriver.Mobile_No)
 	fmt.Printf("Identification No: %s\n", onlyDriver.Id_No)
-	fmt.Printf("Car No: %s\n\n", onlyDriver.Car_No)
+	fmt.Printf("Car No: %s\n", onlyDriver.Car_No)
+	fmt.Printf("Availability: %t\n\n", onlyDriver.Is_Available)
 	fmt.Println("Driver Console")
 	fmt.Println(" 1. Update information")
 	fmt.Println(" 2. Change availability status (to get allocated trips)")
@@ -432,48 +435,59 @@ func menuDriver() string {
 	return option
 }
 
-func updateUserDriver() {
+func updateInformationDriver() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	fmt.Println("\n========== Create User (Driver) ==========")
+	id := strings.ReplaceAll(userId, userId[0:1], "")
+	drivers, err := getDriver(id)
+	if err != nil {
+		fmt.Println("Error occured while retrieving users")
+		return
+	} else if len(drivers) != 1 {
+		fmt.Println("Error occured: No user with ID")
+		return
+	}
+	onlyDriver := drivers[0]
+
+	fmt.Println("\n========== Update User (Driver) ==========")
 	fmt.Println(`Type "esc" for any option go back to menu`)
 
-	fmt.Print("First Name: ")
+	fmt.Printf("First Name (%s): ", onlyDriver.First_Name)
 	scanner.Scan()
 	firstName := scanner.Text()
 	if strings.ToLower(firstName) == "esc" {
 		return
 	}
 
-	fmt.Print("Last Name: ")
+	fmt.Printf("Last Name (%s): ", onlyDriver.Last_Name)
 	scanner.Scan()
 	lastName := scanner.Text()
 	if strings.ToLower(lastName) == "esc" {
 		return
 	}
 
-	fmt.Printf("Email: ")
+	fmt.Printf("Email (%s): ", onlyDriver.Email)
 	scanner.Scan()
 	email := scanner.Text()
 	if strings.ToLower(email) == "esc" {
 		return
 	}
 
-	fmt.Printf("Mobile No: ")
+	fmt.Printf("Mobile No (%s): ", onlyDriver.Mobile_No)
 	scanner.Scan()
 	mobileNo := scanner.Text()
 	if strings.ToLower(mobileNo) == "esc" {
 		return
 	}
 
-	fmt.Printf("Identification No: ")
+	fmt.Printf("Identification No (%s): ", onlyDriver.Id_No)
 	scanner.Scan()
 	idNo := scanner.Text()
 	if strings.ToLower(idNo) == "esc" {
 		return
 	}
 
-	fmt.Printf("Car No: ")
+	fmt.Printf("Car No (%s): ", onlyDriver.Car_No)
 	scanner.Scan()
 	carNo := scanner.Text()
 	if strings.ToLower(carNo) == "esc" {
@@ -488,7 +502,51 @@ func updateUserDriver() {
 	}
 
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
-		err := createDriver(Driver{First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo, Id_No: idNo, Car_No: carNo})
+		err := updateDriver(Driver{Driver_Id: onlyDriver.Driver_Id, First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo, Id_No: idNo, Car_No: carNo})
+		if err == nil {
+			fmt.Println("Driver successfully updated")
+		} else {
+			fmt.Println("Error occured while updating driver")
+		}
+	}
+}
+
+func updateUserDriverAvailability() {
+	scanner := bufio.NewScanner(os.Stdin)
+
+	fmt.Println("\n========== Update Availability (Driver) ==========")
+	fmt.Println(`Type "esc" for any option go back to menu`)
+
+	var isAvailableBool bool
+	for {
+		fmt.Print("Availability (y/n): ")
+		scanner.Scan()
+		isAvailable := scanner.Text()
+		if strings.ToLower(isAvailable) == "esc" {
+			return
+		} else if strings.ToLower(isAvailable) == "y" || strings.ToLower(isAvailable) == "yes" {
+			isAvailableBool = true
+			break
+		} else if strings.ToLower(isAvailable) == "n" || strings.ToLower(isAvailable) == "no" {
+			isAvailableBool = false
+			break
+		} else {
+			fmt.Println("Wrong input, try y/n/esc")
+		}
+	}
+
+	fmt.Print("Confirm Create? (y/n): ")
+	scanner.Scan()
+	confirmUpdate := scanner.Text()
+	if strings.ToLower(confirmUpdate) == "esc" {
+		return
+	}
+
+	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
+		id := strings.ReplaceAll(userId, userId[0:1], "")
+		intId, _ := strconv.Atoi(id)
+		fmt.Println(intId)
+		err := updateDriverAvilability(Driver{Driver_Id: intId, Is_Available: isAvailableBool})
 		if err == nil {
 			fmt.Println("Driver successfully updated")
 		} else {
@@ -501,7 +559,7 @@ func processSQLNullString(data sql.NullString) string {
 	if data.Valid {
 		return data.String
 	} else {
-		return "NULL"
+		return "-"
 	}
 }
 
@@ -509,6 +567,6 @@ func processSQLNullTime(data sql.NullTime) string {
 	if data.Valid {
 		return fmt.Sprintf("%d/%d/%d %d:%d", data.Time.Day(), data.Time.Month(), data.Time.Year(), data.Time.Hour(), data.Time.Minute())
 	} else {
-		return "NULL"
+		return "-"
 	}
 }

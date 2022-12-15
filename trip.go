@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -32,6 +33,10 @@ func getTripFilterPassangerId(passangerId string) ([]Trip_Filter_Passanger, erro
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/trip?passanger_id="+passangerId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allTrip []Trip_Filter_Passanger
 				json.Unmarshal(body, &allTrip)
 				return allTrip, nil
@@ -55,7 +60,8 @@ func createTrip(trip Trip) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -24,6 +25,10 @@ func getAllDriver() ([]Driver, error) {
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/driver", nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allDriver []Driver
 				json.Unmarshal(body, &allDriver)
 				return allDriver, nil
@@ -43,6 +48,10 @@ func getDriver(id string) ([]Driver, error) {
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/driver/"+id, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allDriver []Driver
 				json.Unmarshal(body, &allDriver)
 				return allDriver, nil
@@ -66,7 +75,8 @@ func createDriver(driver Driver) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err
@@ -85,7 +95,8 @@ func updateDriver(driver Driver) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err
@@ -104,7 +115,8 @@ func updateDriverAvilability(driver Driver) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err

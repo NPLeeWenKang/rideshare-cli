@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,6 +22,10 @@ func getAllPassanger() ([]Passanger, error) {
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/passanger", nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allPassanger []Passanger
 				json.Unmarshal(body, &allPassanger)
 				return allPassanger, nil
@@ -40,6 +45,10 @@ func getPassanger(id string) ([]Passanger, error) {
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/passanger/"+id, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allPassanger []Passanger
 				json.Unmarshal(body, &allPassanger)
 				return allPassanger, nil
@@ -63,7 +72,8 @@ func createPassanger(passanger Passanger) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err
@@ -82,7 +92,8 @@ func updatePassanger(passanger Passanger) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err

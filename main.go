@@ -112,7 +112,7 @@ func menu() string {
 	// Get all drivers
 	allDriver, err := getAllDriver()
 	if err != nil {
-		fmt.Println("Error occured while retrieving Passangers")
+		fmt.Println("Error occured while retrieving Drivers")
 	}
 
 	for _, v := range allDriver {
@@ -180,7 +180,7 @@ func createUserPassanger() {
 		if err == nil {
 			fmt.Println("Passanger successfully created")
 		} else {
-			fmt.Println("Error occured while creating trip")
+			fmt.Println("Error occured while creating passanger")
 		}
 	}
 }
@@ -451,9 +451,9 @@ func displayCreateTrip() {
 		intId, _ := strconv.Atoi(id)
 		err := createTrip(Trip{Passanger_Id: intId, Pick_Up: pickUp, Drop_Off: dropOff})
 		if err == nil {
-			fmt.Println("Passanger successfully updated")
+			fmt.Println("Trip successfully updated")
 		} else {
-			fmt.Println("Error occured while updating passanger")
+			fmt.Println("Error occured while updating trip")
 		}
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -57,7 +58,8 @@ func updateTripAssignment(tripAssignment Trip_Assignment) error {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
 			} else {
-				return nil
+				err = errors.New("ERROR: Bad Request")
+				return err
 			}
 		} else {
 			return err
@@ -72,6 +74,10 @@ func getCurrentTripAssignmentWithMoreDataFilterPassangerId(passangerId string) (
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/passanger/current_assignment/"+passangerId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allTrip []Trip_Assignment_With_Passanger_Trip
 				json.Unmarshal(body, &allTrip)
 				return allTrip, nil
@@ -91,6 +97,10 @@ func getCurrentTripAssignmentWithMoreDataFilterDriverId(driverId string) ([]Trip
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/driver/current_assignment/"+driverId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
+				if res.StatusCode == http.StatusBadRequest {
+					err = errors.New("ERROR: Bad Request")
+					return nil, err
+				}
 				var allTrip []Trip_Assignment_With_Driver_Trip
 				json.Unmarshal(body, &allTrip)
 				return allTrip, nil

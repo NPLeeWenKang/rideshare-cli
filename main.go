@@ -44,6 +44,8 @@ func main() {
 					displayPassangerTrips()
 				} else if option == "3" {
 					displayCreateTrip()
+				} else if option == "000" {
+					continue
 				} else if option == "999" {
 					userId = ""
 				} else {
@@ -55,6 +57,30 @@ func main() {
 					updateInformationDriver()
 				} else if option == "2" {
 					updateUserDriverAvailability()
+				} else if option == "3" || option == "4" || option == "5" || option == "6" {
+					id := strings.ReplaceAll(userId, userId[0:1], "")
+					tripAssignments, err := getCurrentTripAssignmentWithMoreDataFilterDriverId(id)
+					if err != nil {
+						fmt.Println("Error occured while retrieving users")
+						continue
+					}
+					onlyTripAssignment := tripAssignments[0]
+					if !validateTripConsoleOptions(onlyTripAssignment, option) {
+						fmt.Println("Invalid option")
+						continue
+					}
+
+					if option == "3" {
+						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "ACCEPTED"})
+					} else if option == "4" {
+						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "REJECTED"})
+					} else if option == "5" {
+						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "DRIVING"})
+					} else if option == "6" {
+						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "DONE"})
+					}
+				} else if option == "000" {
+					continue
 				} else if option == "999" {
 					userId = ""
 				} else {
@@ -270,6 +296,27 @@ func menuPassanger() string {
 	fmt.Println(" 1. Update information")
 	fmt.Println(" 2. Display trips")
 	fmt.Println(" 3. Start a new trip")
+
+	tripAssignments, err := getCurrentTripAssignmentWithMoreDataFilterPassangerId(id)
+	if err != nil {
+		fmt.Println("Error occured while retrieving users")
+		return ""
+	} else if len(tripAssignments) != 0 {
+		fmt.Println(" \n========== Trip Status ==========")
+	}
+	for _, v := range tripAssignments {
+		fmt.Printf("\nTrip Id: %d\n", v.Trip_Id)
+		fmt.Printf("Driver: (%d) %s %s\n", v.Driver_Id, v.First_Name, v.Last_Name)
+		fmt.Printf("Mobile No: %s\n", v.Mobile_No)
+		fmt.Printf("Car No: %s\n", v.Car_No)
+		fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
+		fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
+		fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
+		fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
+		fmt.Printf("Status: %s\n", v.Status)
+	}
+
+	fmt.Println("\n 000. Refresh Data")
 	fmt.Println(" 999. Log out")
 	fmt.Print("Enter a user to sign in as (eg. c1): ")
 
@@ -414,7 +461,7 @@ func menuDriver() string {
 	onlyDriver := drivers[0]
 
 	fmt.Println("========== Ride Share ==========")
-	fmt.Printf("Driver Id: %d\n", onlyDriver.Driver_Id)
+	fmt.Printf("\nDriver Id: %d\n", onlyDriver.Driver_Id)
 	fmt.Printf("First Name: %s\n", onlyDriver.First_Name)
 	fmt.Printf("Last Name: %s\n", onlyDriver.Last_Name)
 	fmt.Printf("Email: %s\n", onlyDriver.Email)
@@ -425,7 +472,36 @@ func menuDriver() string {
 	fmt.Println("Driver Console")
 	fmt.Println(" 1. Update information")
 	fmt.Println(" 2. Change availability status (to get allocated trips)")
-	fmt.Println(" \nTrip Status")
+
+	tripAssignments, err := getCurrentTripAssignmentWithMoreDataFilterDriverId(id)
+	if err != nil {
+		fmt.Println("Error occured while retrieving users")
+		return ""
+	}
+	if len(tripAssignments) == 1 {
+		onlyTripAssignment := tripAssignments[0]
+
+		fmt.Println(" \n========== Trip Status ==========")
+		fmt.Printf("Trip Id: %d\n", onlyTripAssignment.Trip_Id)
+		fmt.Printf("Passanger: (%d) %s %s\n", onlyTripAssignment.Passanger_Id, onlyTripAssignment.First_Name, onlyTripAssignment.Last_Name)
+		fmt.Printf("Mobile No: %s\n", onlyTripAssignment.Mobile_No)
+		fmt.Printf("Pickup Location: %s\n", onlyTripAssignment.Pick_Up)
+		fmt.Printf("Dropoff Location: %s\n", onlyTripAssignment.Drop_Off)
+		fmt.Printf("Start Time: %s\n", processSQLNullTime(onlyTripAssignment.Start))
+		fmt.Printf("End Time: %s\n", processSQLNullTime(onlyTripAssignment.End))
+		fmt.Printf("Status: %s\n", onlyTripAssignment.Status)
+		fmt.Println("\nTrip Console")
+		if onlyTripAssignment.Status == "PENDING" {
+			fmt.Println(" 3. Accept Trip")
+			fmt.Println(" 4. Reject Trip")
+		} else if onlyTripAssignment.Status == "ACCEPTED" {
+			fmt.Println(" 5. Start Trip")
+		} else if onlyTripAssignment.Status == "DRIVING" {
+			fmt.Println(" 6. End Trip")
+		}
+	}
+
+	fmt.Println("\n 000. Refresh Data")
 	fmt.Println(" 999. Log out")
 	fmt.Print("Enter a user to sign in as (eg. c1): ")
 
@@ -568,5 +644,17 @@ func processSQLNullTime(data sql.NullTime) string {
 		return fmt.Sprintf("%d/%d/%d %d:%d", data.Time.Day(), data.Time.Month(), data.Time.Year(), data.Time.Hour(), data.Time.Minute())
 	} else {
 		return "-"
+	}
+}
+
+func validateTripConsoleOptions(onlyTripAssignment Trip_Assignment_With_Driver_Trip, option string) bool {
+	if onlyTripAssignment.Status == "PENDING" && (option == "3" || option == "4") {
+		return true
+	} else if onlyTripAssignment.Status == "ACCEPTED" && (option == "5") {
+		return true
+	} else if onlyTripAssignment.Status == "DRIVING" && (option == "6") {
+		return true
+	} else {
+		return false
 	}
 }

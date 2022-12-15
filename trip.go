@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"time"
 )
 
 type Trip struct {
@@ -26,13 +25,6 @@ type Trip_Filter_Passanger struct {
 	Start        sql.NullTime   `json:"start"`
 	End          sql.NullTime   `json:"end"`
 	Status       sql.NullString `json:"status"`
-}
-
-type Trip_Assignment struct {
-	Trip_Id         int       `json:"trip_id"`
-	Driver_Id       int       `json:"driver_id"`
-	Status          string    `json:"status"`
-	Assign_Datetime time.Time `json:"assign_datetime"`
 }
 
 func getTripFilterPassangerId(passangerId string) ([]Trip_Filter_Passanger, error) {

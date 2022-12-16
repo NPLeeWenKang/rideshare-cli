@@ -67,19 +67,17 @@ func main() {
 						continue
 					}
 					onlyTripAssignment := tripAssignments[0]
-					if !validateTripConsoleOptions(onlyTripAssignment, option) {
-						fmt.Println("Invalid option")
-						continue
-					}
 
-					if option == "3" {
+					if option == "3" && onlyTripAssignment.Status == "PENDING" {
 						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "ACCEPTED"})
-					} else if option == "4" {
+					} else if option == "4" && onlyTripAssignment.Status == "PENDING" {
 						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "REJECTED"})
-					} else if option == "5" {
+					} else if option == "5" && onlyTripAssignment.Status == "ACCEPTED" {
 						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "DRIVING"})
-					} else if option == "6" {
+					} else if option == "6" && onlyTripAssignment.Status == "DRIVING" {
 						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "DONE"})
+					} else {
+						fmt.Println("Invalid option")
 					}
 				} else if option == "000" {
 					continue

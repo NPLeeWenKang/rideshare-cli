@@ -26,11 +26,29 @@ This assignment is to implement a ride-share platform using a microservice archi
 
 ## Solution Architecture
 
+Before any code has been written, the entity relations and the overall architecture was drawn out to easily understand and scale the project. Furthermore, planning early reducing the need to refactor large chunks of code whenever new requirements are discovered.
+
 ### Entity Relationship Diagram
 ![image](https://user-images.githubusercontent.com/73012553/208162989-6a729f6d-0611-40fd-9365-fcd159d1ef5f.png)
 
+For the RideShare project, there are a total of 4 entities, Passanger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
+
+However, for the Trip Assignment entity, I took liberty in coming up with the attributes needed to satisfy the design considerations stated before. As seen, there is a seperation of relationship between Trip and Driver via Trip Assignment as this would allow drivers to reject trip assignments without affecting the Trip entity. By seperating this, it also normalises the data.
+
 ### Architecture Diagram 
 ![image](https://user-images.githubusercontent.com/73012553/208163133-07261890-11ba-493c-8da6-7772240ea376.png)
+
+Because the project adopted a microservice architecture, several services has been created.
+
+* **rideshare-cli** - Built with GO, this service acts as an interface for users to interact with the RideShare system. It has the appropriate error checks and satisfies all the functionalities listed above.
+
+* **rideshare-api** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is live on port 5000.
+
+* **rideshare-tripassignment** - Built with GO, this service is in charge of handling the trip<>driver assignments where it runs the assignment algorithem every 8 seconds. It is good to take note that this service does not have any exposed ports and connects directly with the database instead of via the api.
+
+* **rideshare-db** - For persistant data storage, a MySQL database was used. Although not required by the assignment, this service has been configured to run on Docker enviroments. Because MySQL's default port is 3306, this has been kept the same with Docker's exposed port being set to 3306:3306.
+
+* **rideshare-ui (bonus)** - A web interface has been created with React that allows users to interact with the RideShare via their referred browser instead of a CLI. The web UI mimics the CLI interface with identical control flow, display style and functionalities. Because this service is a "bonus", this service has been developed in and only tested on Chrome Version 108.0.5359.125 (Official Build) (64-bit).
 
 ## Trip Assignment Process
 

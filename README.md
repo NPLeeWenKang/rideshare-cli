@@ -5,10 +5,10 @@ ID: 10203100B<br />
 
 ## Contents
 
-1. [Repositories](##Repositories)
-2. [Features and Design Considerations](##Features-and-Design-Considerations)
-3. [Solution Architecture](##Solution-Architecture)
-4. [Trip Assignment Process](##Trip-Assignment-Process)
+1. [Repositories](#Repositories)
+2. [Features and Design Considerations](#Features-and-Design-Considerations)
+3. [Solution Architecture](#Solution-Architecture)
+4. [Trip Assignment Process](#Trip-Assignment-Process)
 
 
 This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passangers and drivers. Passangers should be able to start trips while drivers should be able to accept them.

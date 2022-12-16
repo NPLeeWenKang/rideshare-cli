@@ -8,11 +8,11 @@ This assignment is to implement a ride-share platform using a microservice archi
 ## Repositories
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
-| 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | https://github.com/NPLeeWenKang/rideshare-cli |
-| 2 | rideshare-api | Interacts directly with the database for persistant data storage. Uses REST. | https://github.com/NPLeeWenKang/rideshare_api_svc |
-| 3 | rideshare-tripassignment | Service that is in charge of assigning trips to drivers. | https://github.com/NPLeeWenKang/rideshare-tripassignment |
-| 4 | rideshare-db | MySQL for persistant data storage. | https://github.com/NPLeeWenKang/rideshare_db |
-| 5 | rideshare-ui (bonus) |  | https://github.com/NPLeeWenKang/rideshare-ui |
+| 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | (Link)[https://github.com/NPLeeWenKang/rideshare-cli] |
+| 2 | rideshare-api | Interacts directly with the database for persistant data storage. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare_api_svc) |
+| 3 | rideshare-tripassignment | Service that is in charge of assigning trips to drivers. | [Link](https://github.com/NPLeeWenKang/rideshare-tripassignment) |
+| 4 | rideshare-db | MySQL for persistant data storage. | [Link](https://github.com/NPLeeWenKang/rideshare_db) |
+| 5 | rideshare-ui (bonus) | For the bonus marks, this service serves a website built using React. | [Link](https://github.com/NPLeeWenKang/rideshare-ui) |
 
 ## Design Process
 While designing this website, I had to think of my users and how they would use and navigate the website. As a result, I tried to imagine and understand my users from their point of view.

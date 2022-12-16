@@ -327,7 +327,7 @@ func menuPassanger() string {
 
 	fmt.Println("\n 000. Refresh Data")
 	fmt.Println(" 999. Log out")
-	fmt.Print("Enter a user to sign in as (eg. c1): ")
+	fmt.Print("Enter an Option: ")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
@@ -512,7 +512,7 @@ func menuDriver() string {
 
 	fmt.Println("\n 000. Refresh Data")
 	fmt.Println(" 999. Log out")
-	fmt.Print("Enter a user to sign in as (eg. c1): ")
+	fmt.Print("Enter an Option: ")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()

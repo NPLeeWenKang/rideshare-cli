@@ -3,18 +3,37 @@ Name: Lee Wen Kang<br />
 Class: P03<br />
 ID: 10203100B<br />
 
+## Contents
+
+1. [Repositories](## Repositories)
+2. [Features and Design Considerations](## Features and Design Considerations)
+3. [Solution Architecture](## Solution Architecture)
+4. [Trip Assignment Process](## Trip Assignment Process)
+
+
 This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passangers and drivers. Passangers should be able to start trips while drivers should be able to accept them.
 
 ## Repositories
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
 | 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | [Link](https://github.com/NPLeeWenKang/rideshare-cli) |
-| 2 | rideshare-api | Interacts directly with the database for persistant data storage. Uses REST. | ![Link](https://github.com/NPLeeWenKang/rideshare_api_svc) |
+| 2 | rideshare-api | Interacts directly with the database for persistant data storage. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare_api_svc) |
 | 3 | rideshare-tripassignment | Service that is in charge of assigning trips to drivers. | [Link](https://github.com/NPLeeWenKang/rideshare-tripassignment) |
 | 4 | rideshare-db | MySQL for persistant data storage. | [Link](https://github.com/NPLeeWenKang/rideshare_db) |
 | 5 | rideshare-ui (bonus) | For the bonus marks, this service serves a website built using React. | [Link](https://github.com/NPLeeWenKang/rideshare-ui) |
 
+## Features and Design Considerations
+
 ## Solution Architecture
+
+### Entity Relationship Diagram
+![image](https://user-images.githubusercontent.com/73012553/208162989-6a729f6d-0611-40fd-9365-fcd159d1ef5f.png)
+
+### Architecture Diagram 
+![image](https://user-images.githubusercontent.com/73012553/208163133-07261890-11ba-493c-8da6-7772240ea376.png)
+
+## Trip Assignment Process
+
 While designing this website, I had to think of my users and how they would use and navigate the website. As a result, I tried to imagine and understand my users from their point of view.
 Firstly, I identified some potential users that would browse my website, and why they would want to use my website.
 1. As a scholarship interviewer, I would like to know more about the interviewee. These can include his past projects, a short description about himself or his thinking mindset. By knowing more  about the interviewee, I would be able to better judge if he will make use of the scholarship to it's fullest extent.

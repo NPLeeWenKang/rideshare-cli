@@ -653,7 +653,7 @@ func processSQLNullString(data sql.NullString) string {
 
 func processSQLNullTime(data sql.NullTime) string {
 	if data.Valid {
-		return fmt.Sprintf("%d/%d/%d %d:%d", data.Time.Day(), data.Time.Month(), data.Time.Year(), data.Time.Hour(), data.Time.Minute())
+		return fmt.Sprintf("%d/%d/%d %d:%d UTC", data.Time.Day(), data.Time.Month(), data.Time.Year(), data.Time.Hour(), data.Time.Minute())
 	} else {
 		return "-"
 	}

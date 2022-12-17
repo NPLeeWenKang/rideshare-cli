@@ -1,4 +1,5 @@
 # ETI Assignment 1 (Master)
+
 Name: Lee Wen Kang<br />
 Class: P03<br />
 ID: 10203100B<br />
@@ -6,7 +7,7 @@ ID: 10203100B<br />
 ## Contents
 
 1. [Repositories](#Repositories)
-2. [Features and Design Considerations](#Features-and-Design-Considerations)
+2. [Requirements and Design Considerations](#Requirements-and-Design-Considerations)
 3. [Solution Architecture](#Solution-Architecture)
 4. [Trip Assignment Process](#Trip-Assignment-Process)
 
@@ -14,6 +15,7 @@ ID: 10203100B<br />
 This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passangers and drivers. Passangers should be able to start trips while drivers should be able to accept them.
 
 ## Repositories
+
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
 | 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | [Link](https://github.com/NPLeeWenKang/rideshare-cli) |
@@ -22,20 +24,78 @@ This assignment is to implement a ride-share platform using a microservice archi
 | 4 | rideshare-db | MySQL for persistant data storage. | [Link](https://github.com/NPLeeWenKang/rideshare_db) |
 | 5 | rideshare-ui (bonus) | For the bonus marks, this service serves a website built using React. | [Link](https://github.com/NPLeeWenKang/rideshare-ui) |
 
-## Features and Design Considerations
+## Requirements and Design Considerations
+
+Quote from assignment brief
+
+> You are required to implement a ride-sharing platform using microservice architecture. The platform has 2 primary group of users, namely the passengers and drivers. Users can create either account. 
+>
+> During creation of passenger account, first name, last name, mobile number, and email address are required. Subsequently, users can update any information in their account, but they are not able to delete their accounts for audit purposes.
+>
+> For driver account creation, first name, last name, mobile number, email address, identification number and car license number are required. Drivers can update all information except their identification number. Similarly, a driver account cannot be deleted.
+>
+> A passenger can request for a trip with the postal codes of the pick-up and drop-off location. The platform will assign an available driver, who is not driving a passenger, to the trip. This driver will then be able to initiate a start trip or end trip. The passenger can retrieve all trips he/she has taken before in reverse chronological order
+
+### Requirements
+
+Having analysed the assignment brief, these are some of the requirements gathered and will be implemented.
+
+1. **Select user to "login"** - As an authentication system is needed, the system will simply request the user to input the user Id to "login" as.
+
+2. **Create passanger** - Allows users to create passanger entities using the attributes, first name, last name, mobile number and email address. Passanger Ids are to be auto assigned.
+
+3. **Create driver** - Allows users to create driver entities using the attributes, first name, last name, mobile number, email address, identification number and car number. Driver Ids are to be auto assigned.
+
+4. **Update passanger** - Allows users to edit all passanger information.
+
+5. **Update driver** - Allows users to edit all driver information except the identification number.
+
+6. **Passanger and driver cannot be deleted** - For auditing purposes, users cannot delete any entities.
+
+7. **Display trips for passanger** - Display the trips taken by a passanger in descending order based on the trip id.
+
+8. **Create/start trip** - Passangers should be able to start a trip by specifying their pick-up and drop-off location.
+
+9. **Trip assignment** - The system should assign unassigned trips to drivers (in-depth explaination in the [Design Considerations](#Design-Considerations) section).
+
+10. **Display current trip assignments (passanger)** - Passangers should be able to see all their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
+
+    * Trip id.
+    * Driver's id, first name, last name and mobile number.
+    * Trip's pick-up location, drop-off location, start time, end time and status.
+
+11. **Display current trip assignments (driver)** - Driver should be able to see their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
+
+    * Trip id
+    * Passanger's id, first name, last name and mobile number.
+    * Trip's pick-up location, drop-off location, start time, end time and status.
+
+12. **Driver should be able to change status of trip** - This can include rejecting, accepting, starting and ending trips. At each status of the trip, the RideShare system should handle it appropriately [Design Considerations](#Design-Considerations) section).
+
+### Design Considerations
+
+passanger can create multiple trips
+
+trips in progress definition
+
+what happens at each stage of trip status
+
+trip assignment algorithem
 
 ## Solution Architecture
 
 Before any code has been written, the entity relations and the overall architecture was drawn out to easily understand and scale the project. Furthermore, planning early reducing the need to refactor large chunks of code whenever new requirements are discovered.
 
 ### Entity Relationship Diagram
-<img src="https://user-images.githubusercontent.com/73012553/208162989-6a729f6d-0611-40fd-9365-fcd159d1ef5f.png" alt="Architecture Diagram" width="800"/>
+
+<img src="https://user-images.githubusercontent.com/73012553/208162989-6a729f6d-0611-40fd-9365-fcd159d1ef5f.png" alt="Architecture Diagram" width="1000"/>
 
 For the RideShare project, there are a total of 4 entities, Passanger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
 
 However, for the Trip Assignment entity, I took liberty in coming up with the attributes needed to satisfy the design considerations stated before. As seen, there is a seperation of relationship between Trip and Driver via Trip Assignment as this would allow drivers to reject trip assignments without affecting the Trip entity. By seperating this, it also normalises the data.
 
 ### Architecture Diagram
+
 <img src="https://user-images.githubusercontent.com/73012553/208163133-07261890-11ba-493c-8da6-7772240ea376.png" alt="Architecture Diagram" width="500"/>
 
 Because the project adopted a microservice architecture, several services has been created.
@@ -54,7 +114,9 @@ Because the project adopted a microservice architecture, several services has be
 
 While designing this website, I had to think of my users and how they would use and navigate the website. As a result, I tried to imagine and understand my users from their point of view.
 Firstly, I identified some potential users that would browse my website, and why they would want to use my website.
+
 1. As a scholarship interviewer, I would like to know more about the interviewee. These can include his past projects, a short description about himself or his thinking mindset. By knowing more  about the interviewee, I would be able to better judge if he will make use of the scholarship to it's fullest extent.
+
 2. As a University , I would like to understand more about the student. I would like to know his past education institutes, some of his notable achievements and his past projects. This allows me to determine if he is passionate about the course and whether to accept his university application. <br/>
 
 To ensure that the website was mobile friendly, I had to design and develop the website from a "Mobile First" perspective. This means that the mobile view is always the first priority. This ensures that the website is always mobile and PC friendly.

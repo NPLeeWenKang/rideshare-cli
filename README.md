@@ -147,11 +147,13 @@ Because the project adopted a microservice architecture, several services has be
 
 * **rideshare-cli** - Built with GO, this service acts as an interface for users to interact with the RideShare system. It has the appropriate error checks and satisfies all the functionalities listed above.
 
-* **rideshare-api** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is live on port 5000.
+* **rideshare-account-svc** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is in charge of accounts such as passangers and drivers. This service is live on port 5000.
 
-* **rideshare-tripassignment** - Built with GO, this service is in charge of handling the trip<>driver assignments where it runs the assignment algorithem every 8 seconds. It is good to take note that this service does not have any exposed ports and connects directly with the database instead of via the api.
+* **rideshare-account-svc** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is in charge of trips and its assignments. This service is live on port 5000.
 
-* **rideshare-db** - For persistant data storage, a MySQL database was used. Although not required by the assignment, this service has been configured to run on Docker enviroments. Because MySQL's default port is 3306, this has been kept the same with Docker's exposed port being set to 3306:3306.
+* **rideshare-ta_process-svc** - Built with GO, this service is in charge of handling the trip<>driver assignments where it runs the assignment algorithem every 8 seconds. Take note that this service does not have any exposed ports and connects directly with the database instead of via other services.
+
+* **rideshare-system-db** - For persistant data storage, a MySQL database was used. Although not required by the assignment, this service has been configured to run on Docker enviroments. Because MySQL's default port is 3306, this has been kept the same with Docker's exposed port being set to 3306:3306.
 
 * **rideshare-ui (bonus)** - A web interface has been created with React that allows users to interact with the RideShare via their referred browser instead of a CLI. The web UI mimics the CLI interface with identical control flow, display style and functionalities. Because this service is a "bonus", this service has been developed in and only tested on Chrome Version 108.0.5359.125 (Official Build) (64-bit).
 

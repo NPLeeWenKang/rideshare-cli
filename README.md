@@ -9,12 +9,14 @@ ID: 10203100B<br />
 1. [Repositories](#Repositories)
 2. [Requirements and Design Considerations](#Requirements-and-Design-Considerations)
 3. [Solution Architecture](#Solution-Architecture)
-4. [Trip Assignment Process](#Trip-Assignment-Process)
-
+4. [Startup Guide](#Startup-Guide)
+4. [Proof of Completion](#Proof-of-Completion)
 
 This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passangers and drivers. Passangers should be able to start trips while drivers should be able to accept them.
 
 ## Repositories
+
+---
 
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
@@ -26,6 +28,8 @@ This assignment is to implement a ride-share platform using a microservice archi
 | 6 | rideshare-ui (bonus) | For the bonus marks, this service serves a website built using React. | [Link](https://github.com/NPLeeWenKang/rideshare-ui) |
 
 ## Requirements and Design Considerations
+
+---
 
 Quote from assignment brief
 
@@ -123,6 +127,8 @@ If the trip assignment is rejected by the driver, the trip is than placed back i
 
 ## Solution Architecture
 
+---
+
 Before any code has been written, the entity relations and the overall architecture was drawn out to easily understand and scale the project. Furthermore, planning early reducing the need to refactor large chunks of code whenever new requirements are discovered.
 
 ### Entity Relationship Diagram
@@ -149,6 +155,10 @@ Because the project adopted a microservice architecture, several services has be
 
 * **rideshare-ui (bonus)** - A web interface has been created with React that allows users to interact with the RideShare via their referred browser instead of a CLI. The web UI mimics the CLI interface with identical control flow, display style and functionalities. Because this service is a "bonus", this service has been developed in and only tested on Chrome Version 108.0.5359.125 (Official Build) (64-bit).
 
-## Trip Assignment Process
+## Startup Guide
 
-## Proof of completion of features
+---
+
+## Proof of Completion
+
+---

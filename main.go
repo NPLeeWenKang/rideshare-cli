@@ -321,7 +321,11 @@ func menuPassanger() string {
 			fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
 			fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
 			fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
-			fmt.Printf("Status: %s\n", processSQLNullString(v.Status))
+			if processSQLNullString(v.Status) == "REJECTED" {
+				fmt.Printf("Status: ASSIGNING...\n")
+			} else {
+				fmt.Printf("Status: %s\n", processSQLNullString(v.Status))
+			}
 		}
 	}
 

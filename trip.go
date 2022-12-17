@@ -30,7 +30,7 @@ type Trip_Filter_Passanger struct {
 
 func getTripFilterPassangerId(passangerId string) ([]Trip_Filter_Passanger, error) {
 	client := &http.Client{}
-	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/trip?passanger_id="+passangerId, nil); err == nil {
+	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/trip?passanger_id="+passangerId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
 				if res.StatusCode == http.StatusBadRequest {
@@ -55,7 +55,7 @@ func createTrip(trip Trip) error {
 	client := &http.Client{}
 	postBody, _ := json.Marshal(trip)
 	resBody := bytes.NewBuffer(postBody)
-	if req, err := http.NewRequest(http.MethodPost, "http://localhost:5000/api/v1/trip", resBody); err == nil {
+	if req, err := http.NewRequest(http.MethodPost, "http://localhost:5001/api/v1/trip", resBody); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if res.StatusCode == http.StatusAccepted {
 				return nil

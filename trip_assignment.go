@@ -53,7 +53,7 @@ func updateTripAssignment(tripAssignment Trip_Assignment) error {
 	client := &http.Client{}
 	postBody, _ := json.Marshal(tripAssignment)
 	resBody := bytes.NewBuffer(postBody)
-	if req, err := http.NewRequest(http.MethodPut, fmt.Sprint("http://localhost:5000/api/v1/trip_assignment"), resBody); err == nil {
+	if req, err := http.NewRequest(http.MethodPut, fmt.Sprint("http://localhost:5001/api/v1/trip_assignment"), resBody); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if res.StatusCode == http.StatusAccepted {
 				return nil
@@ -71,7 +71,7 @@ func updateTripAssignment(tripAssignment Trip_Assignment) error {
 
 func getCurrentTripAssignmentWithMoreDataFilterPassangerId(passangerId string) ([]Trip_Assignment_With_Passanger_Trip, error) {
 	client := &http.Client{}
-	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/passanger/current_assignment/"+passangerId, nil); err == nil {
+	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/current_trip_assignment/passanger/"+passangerId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
 				if res.StatusCode == http.StatusBadRequest {
@@ -94,7 +94,7 @@ func getCurrentTripAssignmentWithMoreDataFilterPassangerId(passangerId string) (
 
 func getCurrentTripAssignmentWithMoreDataFilterDriverId(driverId string) ([]Trip_Assignment_With_Driver_Trip, error) {
 	client := &http.Client{}
-	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/driver/current_assignment/"+driverId, nil); err == nil {
+	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/current_trip_assignment/driver/"+driverId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
 				if res.StatusCode == http.StatusBadRequest {

@@ -119,15 +119,19 @@ To ensure that the trip assignment of drivers to trips is reliable, the definiti
 
 ### Trip assignment process
 
-![image](https://user-images.githubusercontent.com/73012553/208237499-7c74c161-cbed-4864-9003-b914c24ba988.png)
+<img src="https://user-images.githubusercontent.com/73012553/208241729-c3c5bd1c-0391-46a8-a2f1-e9e192b296d6.png" alt="Entity Relationship Diagram"/>
 
-![image](https://user-images.githubusercontent.com/73012553/208237503-dee4a213-b508-4148-8005-c5c3226c962e.png)
+The trip assignment process for this system is quite unique. Instead of assigning trips to drivers at the point of trip creation or rejection, the service runs a trip assignment process every 8 seconds.
 
-The trip assignment process for this system is quite different. Instead of assigning trips to drivers at the point of trip creation or rejection, the service runs a trip assignment process every 8 seconds.
+Firstly, the passanger starts a trip, which creates a trip entity, but remains unassigned to a driver.
 
-It first gets all the unassigned trips, then assign "available" drivers to the trips.
+Every 8 seconds, the rideshare-ta_process-svc with run the assignment process, which will pair up available drivers to unassigned trips. In this case, available drivers are drivers who have set their `is_available` attribute to `true`, drivers who are not occupied with an existing trip and drivers who have not rejected this trip before.
 
-If the trip assignment is rejected by the driver, the trip is than placed back into the unassigned pool of trips and are ready to be assigned by the service again.
+For audit purposes, whenever a trip assignment is made, a trip entity does not get remade, but a new trip assignment entity is created where the `assign_datetime` can be used to look for the most updated status on the trip (entity relationship diagram is in the next section).
+
+After the trip assignment has been completed, the trip assignment status will be `pending` and the driver can either accept or reject the assignment. If the driver rejects the trip, he/she will not ever get assigned the same trip (trip id) and the trip assignment status will be changed to `rejected`. 
+
+However, if the driver accepts the assignment, the trip assignment status will be changed to `accepted`. When the driver picks up the passanger and started the trip, the trip status will be changed to `driving` and the start time will be saved with the trip entity. When the trip is ended, the trip status will be changed to `done` while the end time will be saved.
 
 ## Solution Architecture
 
@@ -137,11 +141,13 @@ Before any code has been written, the entity relations and the overall architect
 
 ### Entity Relationship Diagram
 
-<img src="https://user-images.githubusercontent.com/73012553/208162989-6a729f6d-0611-40fd-9365-fcd159d1ef5f.png" alt="Architecture Diagram" width="1000"/>
+<img src="https://user-images.githubusercontent.com/73012553/208242293-625df8cf-5ff6-4261-be21-af4dd22d841b.png" width="1000"/>
 
 For the RideShare project, there are a total of 4 entities, Passanger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
 
 However, for the Trip Assignment entity, I took liberty in coming up with the attributes needed to satisfy the design considerations stated before. As seen, there is a seperation of relationship between Trip and Driver via Trip Assignment as this would allow drivers to reject trip assignments without affecting the Trip entity. By seperating this, it also normalises the data.
+
+Because a new Trip Assignment is created for every trip assignment, whenever a driver rejects the assignment, a new Trip Assignment will be created. So to differentiate the most updated assignment, it can be filtered by the assign_datetime.
 
 ### Architecture Diagram
 
@@ -164,6 +170,66 @@ Because the project adopted a microservice architecture, several services has be
 ## Startup Guide
 
 ---
+
+To get the RideShare system up, there are several different services that needs to be started up first.
+
+## Setup Database
+
+For this setup, it uses docker and docker-compose to setup a MySQL database on a docker container. However, if a local MySQL server is used, do not follow the guide below for setting up the database, just run `./init/1.sql` to set up all the SQL tables, then run `./init/2.sql` to populate the database with data.
+
+Clone the database config files from the [rideshare-system-db](https://github.com/NPLeeWenKang/rideshare-system-db) repository and change directory into the folder.
+
+```
+git clone https://github.com/NPLeeWenKang/rideshare-system-db.git
+```
+
+Run the docker-compose command to take down existing volumes and containers (if applicable) and start up the new container service in detached mode.
+
+```
+docker-compose down --volume && docker-compose up --build -d
+```
+
+Now the MySQL database is live on port 3306 and a admin console is live on port 8080.
+
+## Setup backend services
+
+For this setup, you will be setting up the [rideshare-account-svc](https://github.com/NPLeeWenKang/rideshare-account-svc), [rideshare-trip-svc](https://github.com/NPLeeWenKang/rideshare-trip-svc) and [rideshare-ta_process-svc](https://github.com/NPLeeWenKang/rideshare-ta_process-svc). These do not need to be started up in any particular order but should done after setting up the database.
+
+For each of the repositories, clone them and ensure that you are in the appropriate directory, then start the GO service.
+
+```
+go run .
+```
+
+When the `rideshare-account-svc` and `rideshare-trip-svc` services are starting, the console should state that it is running on port 5000 and 5001 respectively.
+
+When the `rideshare-ta_process-svc` service is up, the console should output `Assigning...` once every 8 seconds.
+
+## Setup CLI
+
+Similar to the guide above, clone the [rideshare-cli](https://github.com/NPLeeWenKang/rideshare-cli) repository and ensure that you are in the correct directory. Then run the GO service.
+
+```
+go run .
+```
+
+## Setup website (bonus)
+
+Unlike the other services, setting up the website is slightly different as it uses NodeJS. So ensure that [NodeJS](https://nodejs.org/en/) is install in your local machine.
+
+After NodeJS is installed, clone the [rideshare-ui](https://github.com/NPLeeWenKang/rideshare-ui) repository and make sure that you are in the directory.
+
+Next up is to install all the NodeJS packages needed. Some of these includes [React](https://reactjs.org/) and [axios](https://github.com/axios/axios)
+
+```
+npm install
+```
+
+After the installation is completed, you can now start up the service which would make the React website available via port 3000.
+
+```
+npm run start
+```
 
 ## Proof of Completion
 

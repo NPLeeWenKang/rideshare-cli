@@ -145,7 +145,7 @@ However, for the Trip Assignment entity, I took liberty in coming up with the at
 
 ### Architecture Diagram
 
-<img src="https://user-images.githubusercontent.com/73012553/208234565-70741d96-8383-4de4-aa16-ae3d23103fa4.png" alt="Architecture Diagram" width="700"/>
+<img src="https://user-images.githubusercontent.com/73012553/208241443-594c1790-28f8-47e1-be51-f88ba8609dd9.png" alt="Architecture Diagram" width="700"/>
 
 Because the project adopted a microservice architecture, several services has been created.
 

@@ -189,7 +189,7 @@ Run the docker-compose command to take down existing volumes and containers (if 
 docker-compose down --volume && docker-compose up --build -d
 ```
 
-Now the MySQL database is live on port 3306 and a admin console is live on port 8080.
+Now the MySQL database is live on port 3306 and an admin console is live on port 8080.
 
 ## Setup backend services
 
@@ -215,7 +215,7 @@ go run .
 
 ## Setup website (bonus)
 
-Unlike the other services, setting up the website is slightly different as it uses NodeJS. So ensure that [NodeJS](https://nodejs.org/en/) is install in your local machine.
+Unlike the other services, setting up the website is slightly different as it uses NodeJS. So ensure that [NodeJS](https://nodejs.org/en/) is install in your local machine before starting.
 
 After NodeJS is installed, clone the [rideshare-ui](https://github.com/NPLeeWenKang/rideshare-ui) repository and make sure that you are in the directory.
 

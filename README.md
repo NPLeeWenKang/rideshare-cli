@@ -119,6 +119,10 @@ To ensure that the trip assignment of drivers to trips is reliable, the definiti
 
 ### Trip assignment process
 
+![image](https://user-images.githubusercontent.com/73012553/208237499-7c74c161-cbed-4864-9003-b914c24ba988.png)
+
+![image](https://user-images.githubusercontent.com/73012553/208237503-dee4a213-b508-4148-8005-c5c3226c962e.png)
+
 The trip assignment process for this system is quite different. Instead of assigning trips to drivers at the point of trip creation or rejection, the service runs a trip assignment process every 8 seconds.
 
 It first gets all the unassigned trips, then assign "available" drivers to the trips.
@@ -141,7 +145,7 @@ However, for the Trip Assignment entity, I took liberty in coming up with the at
 
 ### Architecture Diagram
 
-<img src="https://user-images.githubusercontent.com/73012553/208234565-70741d96-8383-4de4-aa16-ae3d23103fa4.png" alt="Architecture Diagram" width="700"/>
+<img src="https://user-images.githubusercontent.com/73012553/208241443-594c1790-28f8-47e1-be51-f88ba8609dd9.png" alt="Architecture Diagram" width="700"/>
 
 Because the project adopted a microservice architecture, several services has been created.
 

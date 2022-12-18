@@ -40,6 +40,7 @@ func getAllPassenger() ([]Passenger, error) {
 	}
 }
 
+// Returns an array as it is easier to deal with queries that return no passangers. To check whether the query returns any data, please use len().
 func getPassenger(id string) ([]Passenger, error) {
 	client := &http.Client{}
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5000/api/v1/passenger/"+id, nil); err == nil {
@@ -63,6 +64,7 @@ func getPassenger(id string) ([]Passenger, error) {
 	}
 }
 
+// Creates a passenger based on the passender object given. The passenger id is auto assigned on the database.
 func createPassenger(passenger Passenger) error {
 	client := &http.Client{}
 	postBody, _ := json.Marshal(passenger)
@@ -83,6 +85,7 @@ func createPassenger(passenger Passenger) error {
 	}
 }
 
+// Updates the passenger based on the data in passenger object. So make sure that all fields are filled.
 func updatePassenger(passenger Passenger) error {
 	client := &http.Client{}
 	postBody, _ := json.Marshal(passenger)

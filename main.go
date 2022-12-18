@@ -15,51 +15,53 @@ var userId string
 func main() {
 	for {
 		fmt.Println()
-		if len(userId) == 0 {
+		if len(userId) == 0 { // Main menu
 			option := menu()
-			if option == "999" {
+			if option == "999" { // Exit program
 				return
-			} else if option == "000" {
+			} else if option == "000" { // Refresh the data
 				continue
-			} else if option == "777" {
+			} else if option == "777" { // Display create passanger flow
 				createUserPassenger()
 				continue
-			} else if option == "888" {
+			} else if option == "888" { // Display create driver flow
 				createUserDriver()
 				continue
 			}
-			tempUserId, err := confirmUser(option)
+			
+			// User logs in using the user id. Eg. p1, d3
+			tempUserId, err := confirmUser(option) // Checks with the database to determine whether user id is valid
 			if err != nil {
 				fmt.Println("Error occured while retrieving users")
 			} else if tempUserId == "" {
 				fmt.Println("Error occured: No user with ID")
 			}
-			userId = tempUserId
+			userId = tempUserId // Saves user id (with user type) to global variable
 			fmt.Println("Sign In Successful")
-		} else {
+		} else { // User specific menu
 			userType := strings.ToLower(userId[0:1])
-			if userType == "p" {
+			if userType == "p" { // Passanger menu
 				option := menuPassenger()
-				if option == "1" {
+				if option == "1" { // Display update UI
 					updateInformationPassenger()
-				} else if option == "2" {
+				} else if option == "2" { // Display passanger trips ordered in descending order
 					displayPassengerTrips()
-				} else if option == "3" {
+				} else if option == "3" { // Create trip
 					displayCreateTrip()
-				} else if option == "000" {
+				} else if option == "000" { // Refresh data
 					continue
-				} else if option == "999" {
+				} else if option == "999" { // Logout and return to main menu
 					userId = ""
 				} else {
 					fmt.Println("Invalid option")
 				}
-			} else if userType == "d" {
+			} else if userType == "d" { / Driver menu
 				option := menuDriver()
-				if option == "1" {
+				if option == "1" { // Display update UI
 					updateInformationDriver()
-				} else if option == "2" {
+				} else if option == "2" { // Display update availability UI
 					updateUserDriverAvailability()
-				} else if option == "3" || option == "4" || option == "5" || option == "6" {
+				} else if option == "3" || option == "4" || option == "5" || option == "6" { // Changing status of trip assignment
 					id := strings.ReplaceAll(userId, userId[0:1], "")
 					tripAssignments, err := getCurrentTripAssignmentWithMoreDataFilterDriverId(id)
 					if err != nil {
@@ -67,7 +69,8 @@ func main() {
 						continue
 					}
 					onlyTripAssignment := tripAssignments[0]
-
+					
+					// Determines which status to update to
 					if option == "3" && onlyTripAssignment.Status == "PENDING" {
 						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "ACCEPTED"})
 					} else if option == "4" && onlyTripAssignment.Status == "PENDING" {
@@ -90,6 +93,8 @@ func main() {
 		}
 	}
 }
+
+// Main menu
 func menu() string {
 
 	fmt.Println("========== Ride Share ==========")
@@ -132,6 +137,7 @@ func menu() string {
 	return option
 }
 
+// Passanger creation menu
 func createUserPassenger() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -183,6 +189,7 @@ func createUserPassenger() {
 	}
 }
 
+// Driver creation menu
 func createUserDriver() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -248,9 +255,10 @@ func createUserDriver() {
 	}
 }
 
+// Utility function confirm whether user input id is valid
 func confirmUser(userId string) (string, error) {
 	userType := strings.ToLower(userId[0:1])
-	if userType == "p" {
+	if userType == "p" { // Checks passanger table
 		id := strings.ReplaceAll(userId, userId[0:1], "")
 		allPassenger, err := getPassenger(id)
 		if err != nil {
@@ -260,7 +268,7 @@ func confirmUser(userId string) (string, error) {
 		} else {
 			return userId, nil
 		}
-	} else if userType == "d" {
+	} else if userType == "d" { // Checks driver table
 		id := strings.ReplaceAll(userId, userId[0:1], "")
 		allDriver, err := getDriver(id)
 		if err != nil {
@@ -275,6 +283,7 @@ func confirmUser(userId string) (string, error) {
 	}
 }
 
+// Passanger menu
 func menuPassenger() string {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
 	passengers, err := getPassenger(id)
@@ -307,20 +316,20 @@ func menuPassenger() string {
 	}
 	for _, v := range tripAssignments {
 		fmt.Printf("\nTrip Id: %d\n", v.Trip_Id)
-		if !v.Driver_Id.Valid {
+		if !v.Driver_Id.Valid { // Trip has not been assigned before
 			fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
 			fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
 			fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
 			fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
 			fmt.Printf("Status: ASSIGNING...\n")
 		} else {
-			if processSQLNullString(v.Status) == "REJECTED" {
+			if processSQLNullString(v.Status) == "REJECTED" { // Trip has been assigned but rejected
 				fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
 				fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
 				fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
 				fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
 				fmt.Printf("Status: ASSIGNING...\n")
-			} else {
+			} else { // Trip has been successfully assigned driver
 				fmt.Printf("Driver: (%s) %s %s\n", processSQLNullInt(v.Driver_Id), processSQLNullString(v.First_Name), processSQLNullString(v.Last_Name))
 				fmt.Printf("Mobile No: %s\n", processSQLNullString(v.Mobile_No))
 				fmt.Printf("Car No: %s\n", processSQLNullString(v.Car_No))

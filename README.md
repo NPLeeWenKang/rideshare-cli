@@ -1,4 +1,4 @@
-<h1><p align="center"><img alt="CosmJS" src="https://user-images.githubusercontent.com/73012553/208285088-63810daf-d821-41fb-b39f-5f0852b0cc54.png" width="1000" /></p></h1>
+<h1><p align="center"><img src="https://user-images.githubusercontent.com/73012553/208285088-63810daf-d821-41fb-b39f-5f0852b0cc54.png" width="700" /></p></h1>
 
 # ETI Assignment 1 (Master)
 

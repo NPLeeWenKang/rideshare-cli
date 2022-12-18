@@ -12,7 +12,7 @@ ID: 10203100B<br />
 2. [Requirements and Design Considerations](#Requirements-and-Design-Considerations)
 3. [Solution Architecture](#Solution-Architecture)
 4. [Startup Guide](#Startup-Guide)
-4. [Proof of Completion](#Proof-of-Completion)
+5. [Presentation of Assignment](https://drive.google.com/file/d/1RJ6lQWIdeoL10uSF1ryecgYWk3PaEXvN/view?usp=sharing) (Download for best quality)
 
 This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passengers and drivers. Passengers should be able to start trips while drivers should be able to accept them.
 
@@ -223,5 +223,3 @@ After the installation is completed, you can now start up the service which woul
 ```
 npm run start
 ```
-
-## Proof of Completion

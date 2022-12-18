@@ -314,16 +314,20 @@ func menuPassenger() string {
 			fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
 			fmt.Printf("Status: ASSIGNING...\n")
 		} else {
-			fmt.Printf("Driver: (%s) %s %s\n", processSQLNullInt(v.Driver_Id), processSQLNullString(v.First_Name), processSQLNullString(v.Last_Name))
-			fmt.Printf("Mobile No: %s\n", processSQLNullString(v.Mobile_No))
-			fmt.Printf("Car No: %s\n", processSQLNullString(v.Car_No))
-			fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
-			fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
-			fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
-			fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
 			if processSQLNullString(v.Status) == "REJECTED" {
+				fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
+				fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
+				fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
+				fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
 				fmt.Printf("Status: ASSIGNING...\n")
 			} else {
+				fmt.Printf("Driver: (%s) %s %s\n", processSQLNullInt(v.Driver_Id), processSQLNullString(v.First_Name), processSQLNullString(v.Last_Name))
+				fmt.Printf("Mobile No: %s\n", processSQLNullString(v.Mobile_No))
+				fmt.Printf("Car No: %s\n", processSQLNullString(v.Car_No))
+				fmt.Printf("Pickup Location: %s\n", v.Pick_Up)
+				fmt.Printf("Dropoff Location: %s\n", v.Drop_Off)
+				fmt.Printf("Start Time: %s\n", processSQLNullTime(v.Start))
+				fmt.Printf("End Time: %s\n", processSQLNullTime(v.End))
 				fmt.Printf("Status: %s\n", processSQLNullString(v.Status))
 			}
 		}
@@ -627,7 +631,6 @@ func updateUserDriverAvailability() {
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
 		id := strings.ReplaceAll(userId, userId[0:1], "")
 		intId, _ := strconv.Atoi(id)
-		fmt.Println(intId)
 		err := updateDriverAvilability(Driver{Driver_Id: intId, Is_Available: isAvailableBool})
 		if err == nil {
 			fmt.Println("Driver successfully updated")

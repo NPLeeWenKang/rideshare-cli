@@ -14,22 +14,22 @@ ID: 10203100B<br />
 4. [Startup Guide](#Startup-Guide)
 5. [Presentation of Assignment](https://drive.google.com/file/d/1RJ6lQWIdeoL10uSF1ryecgYWk3PaEXvN/view?usp=sharing) (Download for best quality)
 
-This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passengers and drivers. Passengers should be able to start trips while drivers should be able to accept them.
+This assignment is to implement a ride-share platform using a microservice architecture with 2 primary groups of users, passengers and drivers. Passengers should be able to start trips while drivers should be able to accept them.
 
 ## Repositories
 
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
 | 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | [Link](https://github.com/NPLeeWenKang/rideshare-cli) |
-| 2 | rideshare-account-svc | Interacts directly with the database for persistant data storage for passengers and drivers. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-account-svc) |
-| 3 | rideshare-trip-svc | Interacts directly with the database for persistant data storage for trips and its assignments. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-trip-svc) |
+| 2 | rideshare-account-svc | Interacts directly with the database for persistent data storage for passengers and drivers. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-account-svc) |
+| 3 | rideshare-trip-svc | Interacts directly with the database for persistent data storage for trips and its assignments. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-trip-svc) |
 | 4 | rideshare-ta_process-svc | Service that is in charge of assigning trips to drivers. Trip assignment is abbreviated as ta.| [Link](https://github.com/NPLeeWenKang/rideshare-ta_process-svc) |
-| 5 | rideshare-system-db | MySQL for persistant data storage. | [Link](https://github.com/NPLeeWenKang/rideshare-system-db) |
+| 5 | rideshare-system-db | MySQL for persistent data storage. | [Link](https://github.com/NPLeeWenKang/rideshare-system-db) |
 | 6 | rideshare-ui (bonus) | For the bonus marks, this service serves a website built using React. | [Link](https://github.com/NPLeeWenKang/rideshare-ui) |
 
 ## Requirements and Design Considerations
 
-Quote from assignment brief
+Quote from the assignment brief
 
 > You are required to implement a ride-sharing platform using microservice architecture. The platform has 2 primary group of users, namely the passengers and drivers. Users can create either account. 
 >
@@ -61,15 +61,15 @@ Having analysed the assignment brief, these are some of the requirements gathere
 
 8. **Create/start trip** - Passengers should be able to start a trip by specifying their pick-up and drop-off location.
 
-9. **Trip assignment** - The system should assign unassigned trips to drivers (in-depth explaination in the [Design Considerations](#Design-Considerations) section).
+9. **Trip assignment** - The system should assign unassigned trips to drivers (in-depth explanation in the [Design Considerations](#Design-Considerations) section).
 
-10. **Display current trip assignments (passenger)** - Passengers should be able to see all their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
+10. **Display current trip assignments (passenger)** - Passengers should be able to see all their current trips that are currently still in progress (in-depth explanation in the [Design Considerations](#Design-Considerations) section). They should be able to see:
 
     * Trip id.
     * Driver's id, first name, last name and mobile number.
     * Trip's pick-up location, drop-off location, start time, end time and status.
 
-11. **Display current trip assignments (driver)** - Driver should be able to see their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
+11. **Display current trip assignments (driver)** - Driver should be able to see their current trips that are currently still in progress (in-depth explanation in the [Design Considerations](#Design-Considerations) section). They should be able to see:
 
     * Trip id
     * Passenger's id, first name, last name and mobile number.
@@ -109,7 +109,7 @@ To ensure that the trip assignment of drivers to trips is reliable, the definiti
 ### Different trip statuses
 
 * **Pending** - Trip has been assigned to the driver but the driver has not accepted it yet.
-* **Rejected** - Driver has rejected the trip assignment and the trip assignment algorithem should reassign another available driver.
+* **Rejected** - Driver has rejected the trip assignment and the trip assignment algorithm should reassign another available driver.
 * **Accepted** - Trip has been assigned to the driver and the driver has accepted the assignment. However, the driver has yet to pick-up the passenger
 * **Driving** - Driver has picked up the passenger and is currently driving to the drop-off location.
 * **Done** - Driver has arrived at the drop-off location and the trip is finished.
@@ -132,7 +132,7 @@ However, if the driver accepts the assignment, the trip assignment status will b
 
 ## Solution Architecture
 
-Before any code has been written, the entity relations and the overall architecture was drawn out to easily understand and scale the project. Furthermore, planning early reducing the need to refactor large chunks of code whenever new requirements are discovered.
+Before any code has been written, the classes and the overall architecture were drawn out to easily understand and scale the project. Furthermore, planning early reduces the need to refactor large chunks of code whenever new requirements are discovered.
 
 ### Class Diagram
 
@@ -140,7 +140,7 @@ Before any code has been written, the entity relations and the overall architect
 
 For the RideShare project, there are a total of 4 entities, Passenger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
 
-However, for the Trip Assignment entity, I took liberty in coming up with the attributes needed to satisfy the design considerations stated before. As seen, there is a seperation of relationship between Trip and Driver via Trip Assignment as this would allow drivers to reject trip assignments without affecting the Trip entity. By seperating this, it also normalises the data.
+However, for the Trip Assignment entity, I took the liberty of coming up with the attributes needed to satisfy the design considerations stated before. As seen, there is a separation of relationship between Trip and Driver via Trip Assignment as this would allow drivers to reject trip assignments without affecting the Trip entity. By separating this, it also normalises the data.
 
 Because a new Trip Assignment is created for every trip assignment, whenever a driver rejects the assignment, a new Trip Assignment will be created. So to differentiate the most updated assignment, it can be filtered by the assign_datetime.
 
@@ -148,7 +148,7 @@ Because a new Trip Assignment is created for every trip assignment, whenever a d
 
 <img src="https://user-images.githubusercontent.com/73012553/208284079-47828852-c80b-480f-8f06-9cd861238c5b.png" width="700"/>
 
-Because the project adopted a microservice architecture, several services has been created.
+Because the project adopted a microservice architecture, several services have been created.
 
 * **rideshare-cli** - Built with GO, this service acts as an interface for users to interact with the RideShare system. It has the appropriate error checks and satisfies all the functionalities listed above.
 
@@ -156,11 +156,11 @@ Because the project adopted a microservice architecture, several services has be
 
 * **rideshare-account-svc** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is in charge of trips and its assignments. This service is live on port 5000.
 
-* **rideshare-ta_process-svc** - Built with GO, this service is in charge of handling the trip<>driver assignments where it runs the assignment algorithem every 8 seconds. Take note that this service does not have any exposed ports and connects directly with the database instead of via other services.
+* **rideshare-ta_process-svc** - Built with GO, this service is in charge of handling the trip<>driver assignments where it runs the assignment algorithm every 8 seconds. Take note that this service does not have any exposed ports and connects directly with the database instead of via other services.
 
-* **rideshare-system-db** - For persistant data storage, a MySQL database was used. Although not required by the assignment, this service has been configured to run on Docker enviroments. Because MySQL's default port is 3306, this has been kept the same with Docker's exposed port being set to 3306:3306.
+* **rideshare-system-db** - For persistent data storage, a MySQL database was used. Although not required by the assignment, this service has been configured to run on Docker enviroments. Because MySQL's default port is 3306, this has been kept the same with Docker's exposed port being set to 3306:3306.
 
-* **rideshare-ui (bonus)** - A web interface has been created with React that allows users to interact with the RideShare via their referred browser instead of a CLI. The web UI mimics the CLI interface with identical control flow, display style and functionalities. Because this service is a "bonus", this service has been developed in and only tested on Chrome Version 108.0.5359.125 (Official Build) (64-bit).
+* **rideshare-ui (bonus)** - A web interface has been created with React that allows users to interact with RideShare via their referred browser instead of a CLI. The web UI mimics the CLI interface with identical control flow, display style and functionalities. Because this service is a "bonus", this service has been developed in and only tested on Chrome Version 108.0.5359.125 (Official Build) (64-bit).
 
 ## Startup Guide
 
@@ -168,7 +168,7 @@ To get the RideShare system up, there are several different services that needs 
 
 ## Setup Database
 
-For this setup, it uses docker and docker-compose to setup a MySQL database on a docker container. However, if a local MySQL server is used, do not follow the guide below for setting up the database, just run `./init/1.sql` to set up all the SQL tables, then run `./init/2.sql` to populate the database with data.
+For this setup, it uses docker and docker-compose to set up a MySQL database on a docker container. However, if a local MySQL server is used, do not follow the guide below for setting up the database, just run `./init/1.sql` to set up all the SQL tables, then run `./init/2.sql` to populate the database with data.
 
 Clone the database config files from the [rideshare-system-db](https://github.com/NPLeeWenKang/rideshare-system-db) repository and change directory into the folder.
 
@@ -186,7 +186,7 @@ Now the MySQL database is live on port 3306 and an admin console is live on port
 
 ## Setup backend services
 
-For this setup, you will be setting up the [rideshare-account-svc](https://github.com/NPLeeWenKang/rideshare-account-svc), [rideshare-trip-svc](https://github.com/NPLeeWenKang/rideshare-trip-svc) and [rideshare-ta_process-svc](https://github.com/NPLeeWenKang/rideshare-ta_process-svc). These do not need to be started up in any particular order but should done after setting up the database.
+For this setup, you will be setting up the [rideshare-account-svc](https://github.com/NPLeeWenKang/rideshare-account-svc), [rideshare-trip-svc](https://github.com/NPLeeWenKang/rideshare-trip-svc) and [rideshare-ta_process-svc](https://github.com/NPLeeWenKang/rideshare-ta_process-svc). These do not need to be started up in any particular order but should be done after setting up the database.
 
 For each of the repositories, clone them and ensure that you are in the appropriate directory, then start the GO service.
 
@@ -208,11 +208,11 @@ go run .
 
 ## Setup website (bonus)
 
-Unlike the other services, setting up the website is slightly different as it uses NodeJS. So ensure that [NodeJS](https://nodejs.org/en/) is install in your local machine before starting.
+Unlike the other services, setting up the website is slightly different as it uses NodeJS. So ensure that [NodeJS](https://nodejs.org/en/) is installed in your local machine before starting.
 
 After NodeJS is installed, clone the [rideshare-ui](https://github.com/NPLeeWenKang/rideshare-ui) repository and make sure that you are in the directory.
 
-Next up is to install all the NodeJS packages needed. Some of these includes [React](https://reactjs.org/) and [axios](https://github.com/axios/axios)
+Next up is to install all the NodeJS packages needed. Some of these include [React](https://reactjs.org/) and [axios](https://github.com/axios/axios)
 
 ```
 npm install

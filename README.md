@@ -45,6 +45,9 @@ Quote from assignment brief
 
 ---
 
+<img src="https://user-images.githubusercontent.com/73012553/208284127-d5ab61e1-deb8-4590-a927-f57a2949bff6.png" height="500"/>
+
+
 Having analysed the assignment brief, these are some of the requirements gathered and will be implemented.
 
 1. **Select user to "login"** - As an authentication system is needed, the system will simply request the user to input the user Id to "login" as.
@@ -119,7 +122,7 @@ To ensure that the trip assignment of drivers to trips is reliable, the definiti
 
 ### Trip assignment process
 
-<img src="https://user-images.githubusercontent.com/73012553/208241729-c3c5bd1c-0391-46a8-a2f1-e9e192b296d6.png" alt="Entity Relationship Diagram"/>
+<img src="https://user-images.githubusercontent.com/73012553/208241729-c3c5bd1c-0391-46a8-a2f1-e9e192b296d6.png"/>
 
 The trip assignment process for this system is quite unique. Instead of assigning trips to drivers at the point of trip creation or rejection, the service runs a trip assignment process every 8 seconds.
 
@@ -139,9 +142,9 @@ However, if the driver accepts the assignment, the trip assignment status will b
 
 Before any code has been written, the entity relations and the overall architecture was drawn out to easily understand and scale the project. Furthermore, planning early reducing the need to refactor large chunks of code whenever new requirements are discovered.
 
-### Entity Relationship Diagram
+### Class Diagram
 
-<img src="https://user-images.githubusercontent.com/73012553/208242293-625df8cf-5ff6-4261-be21-af4dd22d841b.png" width="1000"/>
+<img src="https://user-images.githubusercontent.com/73012553/208284083-fd2375ad-7ec7-43d0-9013-c79a0996a536.png" width="1000"/>
 
 For the RideShare project, there are a total of 4 entities, Passenger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
 
@@ -151,7 +154,7 @@ Because a new Trip Assignment is created for every trip assignment, whenever a d
 
 ### Architecture Diagram
 
-<img src="https://user-images.githubusercontent.com/73012553/208241443-594c1790-28f8-47e1-be51-f88ba8609dd9.png" alt="Architecture Diagram" width="700"/>
+<img src="https://user-images.githubusercontent.com/73012553/208284079-47828852-c80b-480f-8f06-9cd861238c5b.png" width="700"/>
 
 Because the project adopted a microservice architecture, several services has been created.
 

@@ -16,8 +16,6 @@ This assignment is to implement a ride-share platform using a microservice archi
 
 ## Repositories
 
----
-
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
 | 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | [Link](https://github.com/NPLeeWenKang/rideshare-cli) |
@@ -28,8 +26,6 @@ This assignment is to implement a ride-share platform using a microservice archi
 | 6 | rideshare-ui (bonus) | For the bonus marks, this service serves a website built using React. | [Link](https://github.com/NPLeeWenKang/rideshare-ui) |
 
 ## Requirements and Design Considerations
-
----
 
 Quote from assignment brief
 
@@ -43,10 +39,7 @@ Quote from assignment brief
 
 ### Requirements
 
----
-
 <img src="https://user-images.githubusercontent.com/73012553/208284127-d5ab61e1-deb8-4590-a927-f57a2949bff6.png" height="500"/>
-
 
 Having analysed the assignment brief, these are some of the requirements gathered and will be implemented.
 
@@ -86,7 +79,6 @@ Having analysed the assignment brief, these are some of the requirements gathere
 
 ### Design Considerations
 
----
 
 ### Passenger can create multiple trips
 
@@ -138,8 +130,6 @@ However, if the driver accepts the assignment, the trip assignment status will b
 
 ## Solution Architecture
 
----
-
 Before any code has been written, the entity relations and the overall architecture was drawn out to easily understand and scale the project. Furthermore, planning early reducing the need to refactor large chunks of code whenever new requirements are discovered.
 
 ### Class Diagram
@@ -171,8 +161,6 @@ Because the project adopted a microservice architecture, several services has be
 * **rideshare-ui (bonus)** - A web interface has been created with React that allows users to interact with the RideShare via their referred browser instead of a CLI. The web UI mimics the CLI interface with identical control flow, display style and functionalities. Because this service is a "bonus", this service has been developed in and only tested on Chrome Version 108.0.5359.125 (Official Build) (64-bit).
 
 ## Startup Guide
-
----
 
 To get the RideShare system up, there are several different services that needs to be started up first.
 
@@ -235,5 +223,3 @@ npm run start
 ```
 
 ## Proof of Completion
-
----

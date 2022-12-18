@@ -28,6 +28,7 @@ type Trip_Filter_Passenger struct {
 	Status       sql.NullString `json:"status"`
 }
 
+// Gets trips by passengers. It is ordered by trip id in descending order.
 func getTripFilterPassengerId(passengerId string) ([]Trip_Filter_Passenger, error) {
 	client := &http.Client{}
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/trip?passenger_id="+passengerId, nil); err == nil {
@@ -51,6 +52,7 @@ func getTripFilterPassengerId(passengerId string) ([]Trip_Filter_Passenger, erro
 	}
 }
 
+// Creates trip based on the object provided.
 func createTrip(trip Trip) error {
 	client := &http.Client{}
 	postBody, _ := json.Marshal(trip)

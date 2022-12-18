@@ -28,7 +28,7 @@ func main() {
 				createUserDriver()
 				continue
 			}
-			
+
 			// User logs in using the user id. Eg. p1, d3
 			tempUserId, err := confirmUser(option) // Checks with the database to determine whether user id is valid
 			if err != nil {
@@ -55,7 +55,7 @@ func main() {
 				} else {
 					fmt.Println("Invalid option")
 				}
-			} else if userType == "d" { / Driver menu
+			} else if userType == "d" { // Driver menu
 				option := menuDriver()
 				if option == "1" { // Display update UI
 					updateInformationDriver()
@@ -69,7 +69,7 @@ func main() {
 						continue
 					}
 					onlyTripAssignment := tripAssignments[0]
-					
+
 					// Determines which status to update to
 					if option == "3" && onlyTripAssignment.Status == "PENDING" {
 						updateTripAssignment(Trip_Assignment{Trip_Id: onlyTripAssignment.Trip_Id, Driver_Id: onlyTripAssignment.Driver_Id, Status: "ACCEPTED"})
@@ -507,7 +507,7 @@ func menuDriver() string {
 		fmt.Println("Error occured while retrieving users")
 		return ""
 	}
-	
+
 	// Since drivers should only have 1 assigned trip at a time, there is no need to account for several trip assignments like passangers
 	if len(tripAssignments) == 1 {
 		onlyTripAssignment := tripAssignments[0]
@@ -522,7 +522,7 @@ func menuDriver() string {
 		fmt.Printf("End Time: %s\n", processSQLNullTime(onlyTripAssignment.End))
 		fmt.Printf("Status: %s\n", onlyTripAssignment.Status)
 		fmt.Println("\nTrip Console")
-		
+
 		// Display trip console based on the current trip assignment status
 		if onlyTripAssignment.Status == "PENDING" {
 			fmt.Println(" 3. Accept Trip")

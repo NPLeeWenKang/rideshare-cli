@@ -49,6 +49,7 @@ type Trip_Assignment_With_Driver_Trip struct {
 	End          sql.NullTime `json:"end"`
 }
 
+// Update trip assignment. This is only used for updating the trip status.
 func updateTripAssignment(tripAssignment Trip_Assignment) error {
 	client := &http.Client{}
 	postBody, _ := json.Marshal(tripAssignment)
@@ -69,6 +70,7 @@ func updateTripAssignment(tripAssignment Trip_Assignment) error {
 	}
 }
 
+// Get "in-progress" trip assignments of passangers
 func getCurrentTripAssignmentWithMoreDataFilterPassengerId(passengerId string) ([]Trip_Assignment_With_Passenger_Trip, error) {
 	client := &http.Client{}
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/current_trip_assignment/passenger/"+passengerId, nil); err == nil {
@@ -92,6 +94,8 @@ func getCurrentTripAssignmentWithMoreDataFilterPassengerId(passengerId string) (
 	}
 }
 
+// Get "in-progress" trip assignments of drivers. This should only return an array with size 1 since drivers can only have 1 active trip at once. However an array is used as it is simpler to deal with null data.
+// To determine whether query was successful in getting a driver's current assignment, use len().
 func getCurrentTripAssignmentWithMoreDataFilterDriverId(driverId string) ([]Trip_Assignment_With_Driver_Trip, error) {
 	client := &http.Client{}
 	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/current_trip_assignment/driver/"+driverId, nil); err == nil {

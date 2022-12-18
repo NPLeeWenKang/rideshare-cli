@@ -164,7 +164,7 @@ Because the project adopted a microservice architecture, several services has be
 
 ## Startup Guide
 
-To get the RideShare system up, there are several different services that needs to be started up first.
+To get the RideShare system up, there are several different services that needs to be started up first. Please set these up in the order stated below.
 
 ## Setup Database
 

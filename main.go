@@ -22,7 +22,7 @@ func main() {
 			} else if option == "000" {
 				continue
 			} else if option == "777" {
-				createUserPassanger()
+				createUserPassenger()
 				continue
 			} else if option == "888" {
 				createUserDriver()
@@ -39,11 +39,11 @@ func main() {
 		} else {
 			userType := strings.ToLower(userId[0:1])
 			if userType == "p" {
-				option := menuPassanger()
+				option := menuPassenger()
 				if option == "1" {
-					updateInformationPassanger()
+					updateInformationPassenger()
 				} else if option == "2" {
-					displayPassangerTrips()
+					displayPassengerTrips()
 				} else if option == "3" {
 					displayCreateTrip()
 				} else if option == "000" {
@@ -93,18 +93,18 @@ func main() {
 func menu() string {
 
 	fmt.Println("========== Ride Share ==========")
-	fmt.Println("Passanger & Driver Console")
+	fmt.Println("Passenger & Driver Console")
 
-	// Get all passangers
-	allPassanger, err := getAllPassanger()
+	// Get all passengers
+	allPassenger, err := getAllPassenger()
 	if err != nil {
-		fmt.Println("Error occured while retrieving Passangers")
+		fmt.Println("Error occured while retrieving Passengers")
 	}
 
 	w := tabwriter.NewWriter(os.Stdout, 1, 1, 0, ' ', 0)
 	fmt.Fprintln(w, "User Id", "\t", "User Type", "\t", "First Name", "\t", "Last Name")
-	for _, v := range allPassanger {
-		fmt.Fprintln(w, "p"+strconv.Itoa(v.Passanger_Id), "\t", "Passanger", "\t", v.First_Name, "\t", v.Last_Name)
+	for _, v := range allPassenger {
+		fmt.Fprintln(w, "p"+strconv.Itoa(v.Passenger_Id), "\t", "Passenger", "\t", v.First_Name, "\t", v.Last_Name)
 	}
 
 	// Get all drivers
@@ -120,7 +120,7 @@ func menu() string {
 
 	fmt.Println()
 	fmt.Println("000. Refresh")
-	fmt.Println("777. Create Passanger")
+	fmt.Println("777. Create Passenger")
 	fmt.Println("888. Create Driver")
 	fmt.Println("999. Quit")
 
@@ -132,10 +132,10 @@ func menu() string {
 	return option
 }
 
-func createUserPassanger() {
+func createUserPassenger() {
 	scanner := bufio.NewScanner(os.Stdin)
 
-	fmt.Println("\n========== Create User (Passanger) ==========")
+	fmt.Println("\n========== Create User (Passenger) ==========")
 	fmt.Println(`Type "esc" for any option go back to menu`)
 
 	fmt.Print("First Name: ")
@@ -174,11 +174,11 @@ func createUserPassanger() {
 	}
 
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
-		err := createPassanger(Passanger{First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo})
+		err := createPassenger(Passenger{First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo})
 		if err == nil {
-			fmt.Println("Passanger successfully created")
+			fmt.Println("Passenger successfully created")
 		} else {
-			fmt.Println("Error occured while creating passanger")
+			fmt.Println("Error occured while creating passenger")
 		}
 	}
 }
@@ -252,10 +252,10 @@ func confirmUser(userId string) (string, error) {
 	userType := strings.ToLower(userId[0:1])
 	if userType == "p" {
 		id := strings.ReplaceAll(userId, userId[0:1], "")
-		allPassanger, err := getPassanger(id)
+		allPassenger, err := getPassenger(id)
 		if err != nil {
 			return "", err
-		} else if len(allPassanger) != 1 {
+		} else if len(allPassenger) != 1 {
 			return "", nil
 		} else {
 			return userId, nil
@@ -275,30 +275,30 @@ func confirmUser(userId string) (string, error) {
 	}
 }
 
-func menuPassanger() string {
+func menuPassenger() string {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
-	passangers, err := getPassanger(id)
+	passengers, err := getPassenger(id)
 	if err != nil {
 		fmt.Println("Error occured while retrieving users")
 		return ""
-	} else if len(passangers) != 1 {
+	} else if len(passengers) != 1 {
 		fmt.Println("Error occured: No user with ID")
 		return ""
 	}
-	onlyPassanger := passangers[0]
+	onlyPassenger := passengers[0]
 
 	fmt.Println("========== Ride Share ==========")
-	fmt.Printf("Passanger Id: %d\n", onlyPassanger.Passanger_Id)
-	fmt.Printf("First Name: %s\n", onlyPassanger.First_Name)
-	fmt.Printf("Last Name: %s\n", onlyPassanger.Last_Name)
-	fmt.Printf("Email: %s\n", onlyPassanger.Email)
-	fmt.Printf("Mobile No: %s\n\n", onlyPassanger.Mobile_No)
-	fmt.Println("Passanger Console")
+	fmt.Printf("Passenger Id: %d\n", onlyPassenger.Passenger_Id)
+	fmt.Printf("First Name: %s\n", onlyPassenger.First_Name)
+	fmt.Printf("Last Name: %s\n", onlyPassenger.Last_Name)
+	fmt.Printf("Email: %s\n", onlyPassenger.Email)
+	fmt.Printf("Mobile No: %s\n\n", onlyPassenger.Mobile_No)
+	fmt.Println("Passenger Console")
 	fmt.Println(" 1. Update information")
 	fmt.Println(" 2. Display trips")
 	fmt.Println(" 3. Start a new trip")
 
-	tripAssignments, err := getCurrentTripAssignmentWithMoreDataFilterPassangerId(id)
+	tripAssignments, err := getCurrentTripAssignmentWithMoreDataFilterPassengerId(id)
 	if err != nil {
 		fmt.Println("Error occured while retrieving users")
 		return ""
@@ -339,46 +339,46 @@ func menuPassanger() string {
 	return option
 }
 
-func updateInformationPassanger() {
+func updateInformationPassenger() {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
-	passangers, err := getPassanger(id)
+	passengers, err := getPassenger(id)
 	if err != nil {
 		fmt.Println("Error occured while retrieving users")
 		return
-	} else if len(passangers) != 1 {
+	} else if len(passengers) != 1 {
 		fmt.Println("Error occured: No user with ID")
 		return
 	}
-	onlyPassanger := passangers[0]
+	onlyPassenger := passengers[0]
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-	fmt.Println("========== Update Information (Passanger) ==========")
+	fmt.Println("========== Update Information (Passenger) ==========")
 	fmt.Println(`Type "esc" for any option go back to menu`)
-	fmt.Printf("Passanger Id: %d\n", onlyPassanger.Passanger_Id)
+	fmt.Printf("Passenger Id: %d\n", onlyPassenger.Passenger_Id)
 
-	fmt.Printf("First Name (%s): ", onlyPassanger.First_Name)
+	fmt.Printf("First Name (%s): ", onlyPassenger.First_Name)
 	scanner.Scan()
 	firstName := scanner.Text()
 	if strings.ToLower(firstName) == "esc" {
 		return
 	}
 
-	fmt.Printf("Last Name (%s): ", onlyPassanger.Last_Name)
+	fmt.Printf("Last Name (%s): ", onlyPassenger.Last_Name)
 	scanner.Scan()
 	lastName := scanner.Text()
 	if strings.ToLower(lastName) == "esc" {
 		return
 	}
 
-	fmt.Printf("Email (%s): ", onlyPassanger.Email)
+	fmt.Printf("Email (%s): ", onlyPassenger.Email)
 	scanner.Scan()
 	email := scanner.Text()
 	if strings.ToLower(email) == "esc" {
 		return
 	}
 
-	fmt.Printf("Mobile No (%s): ", onlyPassanger.Mobile_No)
+	fmt.Printf("Mobile No (%s): ", onlyPassenger.Mobile_No)
 	scanner.Scan()
 	mobileNo := scanner.Text()
 	if strings.ToLower(mobileNo) == "esc" {
@@ -393,18 +393,18 @@ func updateInformationPassanger() {
 	}
 
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
-		err := updatePassanger(Passanger{Passanger_Id: onlyPassanger.Passanger_Id, First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo})
+		err := updatePassenger(Passenger{Passenger_Id: onlyPassenger.Passenger_Id, First_Name: firstName, Last_Name: lastName, Email: email, Mobile_No: mobileNo})
 		if err == nil {
-			fmt.Println("Passanger successfully updated")
+			fmt.Println("Passenger successfully updated")
 		} else {
-			fmt.Println("Error occured while updating passanger")
+			fmt.Println("Error occured while updating passenger")
 		}
 	}
 }
 
-func displayPassangerTrips() {
+func displayPassengerTrips() {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
-	trips, err := getTripFilterPassangerId(id)
+	trips, err := getTripFilterPassengerId(id)
 	if err != nil {
 		fmt.Println("Error occured while retrieving users")
 		return
@@ -451,7 +451,7 @@ func displayCreateTrip() {
 	if strings.ToLower(confirmUpdate) == "y" || strings.ToLower(confirmUpdate) == "yes" {
 		id := strings.ReplaceAll(userId, userId[0:1], "")
 		intId, _ := strconv.Atoi(id)
-		err := createTrip(Trip{Passanger_Id: intId, Pick_Up: pickUp, Drop_Off: dropOff})
+		err := createTrip(Trip{Passenger_Id: intId, Pick_Up: pickUp, Drop_Off: dropOff})
 		if err == nil {
 			fmt.Println("Trip successfully updated")
 		} else {
@@ -496,7 +496,7 @@ func menuDriver() string {
 
 		fmt.Println(" \n========== Trip Status ==========")
 		fmt.Printf("Trip Id: %d\n", onlyTripAssignment.Trip_Id)
-		fmt.Printf("Passanger: (%d) %s %s\n", onlyTripAssignment.Passanger_Id, onlyTripAssignment.First_Name, onlyTripAssignment.Last_Name)
+		fmt.Printf("Passenger: (%d) %s %s\n", onlyTripAssignment.Passenger_Id, onlyTripAssignment.First_Name, onlyTripAssignment.Last_Name)
 		fmt.Printf("Mobile No: %s\n", onlyTripAssignment.Mobile_No)
 		fmt.Printf("Pickup Location: %s\n", onlyTripAssignment.Pick_Up)
 		fmt.Printf("Dropoff Location: %s\n", onlyTripAssignment.Drop_Off)

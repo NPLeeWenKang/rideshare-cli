@@ -12,7 +12,7 @@ ID: 10203100B<br />
 4. [Startup Guide](#Startup-Guide)
 4. [Proof of Completion](#Proof-of-Completion)
 
-This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passangers and drivers. Passangers should be able to start trips while drivers should be able to accept them.
+This assignment is to implement a ride-share platform using a microservice architecture with 2 primary group of users, passengers and drivers. Passengers should be able to start trips while drivers should be able to accept them.
 
 ## Repositories
 
@@ -21,7 +21,7 @@ This assignment is to implement a ride-share platform using a microservice archi
 | No        | Service Name           | Purpose  | Link  |
 | :------------- |:-------------| :-----| :-----|
 | 1 | rideshare-cli (current) | Acts as an interface for users to interact with. It connects to rideshare-api to interact with the database. | [Link](https://github.com/NPLeeWenKang/rideshare-cli) |
-| 2 | rideshare-account-svc | Interacts directly with the database for persistant data storage for passangers and drivers. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-account-svc) |
+| 2 | rideshare-account-svc | Interacts directly with the database for persistant data storage for passengers and drivers. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-account-svc) |
 | 3 | rideshare-trip-svc | Interacts directly with the database for persistant data storage for trips and its assignments. Uses REST. | [Link](https://github.com/NPLeeWenKang/rideshare-trip-svc) |
 | 4 | rideshare-ta_process-svc | Service that is in charge of assigning trips to drivers. Trip assignment is abbreviated as ta.| [Link](https://github.com/NPLeeWenKang/rideshare-ta_process-svc) |
 | 5 | rideshare-system-db | MySQL for persistant data storage. | [Link](https://github.com/NPLeeWenKang/rideshare-system-db) |
@@ -49,23 +49,23 @@ Having analysed the assignment brief, these are some of the requirements gathere
 
 1. **Select user to "login"** - As an authentication system is needed, the system will simply request the user to input the user Id to "login" as.
 
-2. **Create passanger** - Allows users to create passanger entities using the attributes, first name, last name, mobile number and email address. Passanger Ids are to be auto assigned.
+2. **Create passenger** - Allows users to create passenger entities using the attributes, first name, last name, mobile number and email address. Passenger Ids are to be auto assigned.
 
 3. **Create driver** - Allows users to create driver entities using the attributes, first name, last name, mobile number, email address, identification number and car number. Driver Ids are to be auto assigned.
 
-4. **Update passanger** - Allows users to edit all passanger information.
+4. **Update passenger** - Allows users to edit all passenger information.
 
 5. **Update driver** - Allows users to edit all driver information except the identification number.
 
-6. **Passanger and driver cannot be deleted** - For auditing purposes, users cannot delete any entities.
+6. **Passenger and driver cannot be deleted** - For auditing purposes, users cannot delete any entities.
 
-7. **Display trips for passanger** - Display the trips taken by a passanger in descending order based on the trip id.
+7. **Display trips for passenger** - Display the trips taken by a passenger in descending order based on the trip id.
 
-8. **Create/start trip** - Passangers should be able to start a trip by specifying their pick-up and drop-off location.
+8. **Create/start trip** - Passengers should be able to start a trip by specifying their pick-up and drop-off location.
 
 9. **Trip assignment** - The system should assign unassigned trips to drivers (in-depth explaination in the [Design Considerations](#Design-Considerations) section).
 
-10. **Display current trip assignments (passanger)** - Passangers should be able to see all their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
+10. **Display current trip assignments (passenger)** - Passengers should be able to see all their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
 
     * Trip id.
     * Driver's id, first name, last name and mobile number.
@@ -74,7 +74,7 @@ Having analysed the assignment brief, these are some of the requirements gathere
 11. **Display current trip assignments (driver)** - Driver should be able to see their current trips that are currently still in progress (in-depth explaination in the [Design Considerations](#Design-Considerations) section). They should be able to see:
 
     * Trip id
-    * Passanger's id, first name, last name and mobile number.
+    * Passenger's id, first name, last name and mobile number.
     * Trip's pick-up location, drop-off location, start time, end time and status.
 
 12. **Driver should be able to change status of his/her trip** - This can include rejecting, accepting, starting and ending trips. At each status of the trip, the RideShare system should handle it appropriately [Design Considerations](#Design-Considerations) section).
@@ -85,11 +85,11 @@ Having analysed the assignment brief, these are some of the requirements gathere
 
 ---
 
-### Passanger can create multiple trips
+### Passenger can create multiple trips
 
-To mimic actual ride-share platforms, the system has been created to allow passangers to create new trips while their current trip is still in progress, allowing passangers to have more flexibility in booking rides when they require multiple cars.
+To mimic actual ride-share platforms, the system has been created to allow passengers to create new trips while their current trip is still in progress, allowing passengers to have more flexibility in booking rides when they require multiple cars.
 
-To add on, although passangers can start multiple trips simultaneously, drivers can **ONLY** have one trip assignment at once. 
+To add on, although passengers can start multiple trips simultaneously, drivers can **ONLY** have one trip assignment at once. 
 
 ### Definition of "in progress" trips
 
@@ -113,8 +113,8 @@ To ensure that the trip assignment of drivers to trips is reliable, the definiti
 
 * **Pending** - Trip has been assigned to the driver but the driver has not accepted it yet.
 * **Rejected** - Driver has rejected the trip assignment and the trip assignment algorithem should reassign another available driver.
-* **Accepted** - Trip has been assigned to the driver and the driver has accepted the assignment. However, the driver has yet to pick-up the passanger
-* **Driving** - Driver has picked up the passanger and is currently driving to the drop-off location.
+* **Accepted** - Trip has been assigned to the driver and the driver has accepted the assignment. However, the driver has yet to pick-up the passenger
+* **Driving** - Driver has picked up the passenger and is currently driving to the drop-off location.
 * **Done** - Driver has arrived at the drop-off location and the trip is finished.
 
 ### Trip assignment process
@@ -123,7 +123,7 @@ To ensure that the trip assignment of drivers to trips is reliable, the definiti
 
 The trip assignment process for this system is quite unique. Instead of assigning trips to drivers at the point of trip creation or rejection, the service runs a trip assignment process every 8 seconds.
 
-Firstly, the passanger starts a trip, which creates a trip entity, but remains unassigned to a driver.
+Firstly, the passenger starts a trip, which creates a trip entity, but remains unassigned to a driver.
 
 Every 8 seconds, the rideshare-ta_process-svc with run the assignment process, which will pair up available drivers to unassigned trips. In this case, available drivers are drivers who have set their `is_available` attribute to `true`, drivers who are not occupied with an existing trip and drivers who have not rejected this trip before.
 
@@ -131,7 +131,7 @@ For audit purposes, whenever a trip assignment is made, a trip entity does not g
 
 After the trip assignment has been completed, the trip assignment status will be `pending` and the driver can either accept or reject the assignment. If the driver rejects the trip, he/she will not ever get assigned the same trip (trip id) and the trip assignment status will be changed to `rejected`. 
 
-However, if the driver accepts the assignment, the trip assignment status will be changed to `accepted`. When the driver picks up the passanger and started the trip, the trip status will be changed to `driving` and the start time will be saved with the trip entity. When the trip is ended, the trip status will be changed to `done` while the end time will be saved.
+However, if the driver accepts the assignment, the trip assignment status will be changed to `accepted`. When the driver picks up the passenger and started the trip, the trip status will be changed to `driving` and the start time will be saved with the trip entity. When the trip is ended, the trip status will be changed to `done` while the end time will be saved.
 
 ## Solution Architecture
 
@@ -143,7 +143,7 @@ Before any code has been written, the entity relations and the overall architect
 
 <img src="https://user-images.githubusercontent.com/73012553/208242293-625df8cf-5ff6-4261-be21-af4dd22d841b.png" width="1000"/>
 
-For the RideShare project, there are a total of 4 entities, Passanger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
+For the RideShare project, there are a total of 4 entities, Passenger, Trip, Driver and Trip Assignment. The requirements for the entity attributes have been gathered from the assignment brief. 
 
 However, for the Trip Assignment entity, I took liberty in coming up with the attributes needed to satisfy the design considerations stated before. As seen, there is a seperation of relationship between Trip and Driver via Trip Assignment as this would allow drivers to reject trip assignments without affecting the Trip entity. By seperating this, it also normalises the data.
 
@@ -157,7 +157,7 @@ Because the project adopted a microservice architecture, several services has be
 
 * **rideshare-cli** - Built with GO, this service acts as an interface for users to interact with the RideShare system. It has the appropriate error checks and satisfies all the functionalities listed above.
 
-* **rideshare-account-svc** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is in charge of accounts such as passangers and drivers. This service is live on port 5000.
+* **rideshare-account-svc** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is in charge of accounts such as passengers and drivers. This service is live on port 5000.
 
 * **rideshare-account-svc** - Built with GO, this service interacts with RideShare's database and allows other services to communicate with it via REST. This service is in charge of trips and its assignments. This service is live on port 5000.
 

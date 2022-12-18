@@ -18,11 +18,11 @@ type Trip_Assignment struct {
 	Assign_Datetime time.Time `json:"assign_datetime"`
 }
 
-type Trip_Assignment_With_Passanger_Trip struct {
+type Trip_Assignment_With_Passenger_Trip struct {
 	Trip_Id      int            `json:"trip_id"`
 	Driver_Id    sql.NullInt32  `json:"driver_id"`
 	Status       sql.NullString `json:"status"`
-	Passanger_Id int            `json:"passanger_id"`
+	Passenger_Id int            `json:"passenger_id"`
 	First_Name   sql.NullString `json:"first_name"`
 	Last_Name    sql.NullString `json:"last_name"`
 	Mobile_No    sql.NullString `json:"mobile_no"`
@@ -38,7 +38,7 @@ type Trip_Assignment_With_Driver_Trip struct {
 	Trip_Id      int          `json:"trip_id"`
 	Driver_Id    int          `json:"driver_id"`
 	Status       string       `json:"status"`
-	Passanger_Id int          `json:"passanger_id"`
+	Passenger_Id int          `json:"passenger_id"`
 	First_Name   string       `json:"first_name"`
 	Last_Name    string       `json:"last_name"`
 	Mobile_No    string       `json:"mobile_no"`
@@ -69,16 +69,16 @@ func updateTripAssignment(tripAssignment Trip_Assignment) error {
 	}
 }
 
-func getCurrentTripAssignmentWithMoreDataFilterPassangerId(passangerId string) ([]Trip_Assignment_With_Passanger_Trip, error) {
+func getCurrentTripAssignmentWithMoreDataFilterPassengerId(passengerId string) ([]Trip_Assignment_With_Passenger_Trip, error) {
 	client := &http.Client{}
-	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/current_trip_assignment/passanger/"+passangerId, nil); err == nil {
+	if req, err := http.NewRequest(http.MethodGet, "http://localhost:5001/api/v1/current_trip_assignment/passenger/"+passengerId, nil); err == nil {
 		if res, err := client.Do(req); err == nil {
 			if body, err := ioutil.ReadAll(res.Body); err == nil {
 				if res.StatusCode == http.StatusBadRequest {
 					err = errors.New("ERROR: Bad Request")
 					return nil, err
 				}
-				var allTrip []Trip_Assignment_With_Passanger_Trip
+				var allTrip []Trip_Assignment_With_Passenger_Trip
 				json.Unmarshal(body, &allTrip)
 				return allTrip, nil
 			} else {

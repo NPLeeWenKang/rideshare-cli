@@ -352,6 +352,7 @@ func menuPassenger() string {
 	return option
 }
 
+// Update passanger info
 func updateInformationPassenger() {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
 	passengers, err := getPassenger(id)
@@ -415,6 +416,7 @@ func updateInformationPassenger() {
 	}
 }
 
+// Display trips for a certain passenger in descending order
 func displayPassengerTrips() {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
 	trips, err := getTripFilterPassengerId(id)
@@ -434,6 +436,7 @@ func displayPassengerTrips() {
 	w.Flush()
 }
 
+// Create trip with pickup and dropoff location
 func displayCreateTrip() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -473,7 +476,7 @@ func displayCreateTrip() {
 	}
 }
 
-// ----------------------------------------------------------------------------
+// Display driver menu
 func menuDriver() string {
 	id := strings.ReplaceAll(userId, userId[0:1], "")
 	drivers, err := getDriver(id)
@@ -504,6 +507,8 @@ func menuDriver() string {
 		fmt.Println("Error occured while retrieving users")
 		return ""
 	}
+	
+	// Since drivers should only have 1 assigned trip at a time, there is no need to account for several trip assignments like passangers
 	if len(tripAssignments) == 1 {
 		onlyTripAssignment := tripAssignments[0]
 
@@ -517,6 +522,8 @@ func menuDriver() string {
 		fmt.Printf("End Time: %s\n", processSQLNullTime(onlyTripAssignment.End))
 		fmt.Printf("Status: %s\n", onlyTripAssignment.Status)
 		fmt.Println("\nTrip Console")
+		
+		// Display trip console based on the current trip assignment status
 		if onlyTripAssignment.Status == "PENDING" {
 			fmt.Println(" 3. Accept Trip")
 			fmt.Println(" 4. Reject Trip")
@@ -537,6 +544,7 @@ func menuDriver() string {
 	return option
 }
 
+// Update driver information. Except for identification number
 func updateInformationDriver() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -606,6 +614,7 @@ func updateInformationDriver() {
 	}
 }
 
+// Update driver availability
 func updateUserDriverAvailability() {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -649,6 +658,7 @@ func updateUserDriverAvailability() {
 	}
 }
 
+// Processes the sql.NULLInt32 that is returned by some endpoints
 func processSQLNullInt(data sql.NullInt32) string {
 	if data.Valid {
 		return strconv.Itoa(int(data.Int32))
@@ -657,6 +667,7 @@ func processSQLNullInt(data sql.NullInt32) string {
 	}
 }
 
+// Processes the sql.NULLString that is returned by some endpoints
 func processSQLNullString(data sql.NullString) string {
 	if data.Valid {
 		return data.String
@@ -665,22 +676,11 @@ func processSQLNullString(data sql.NullString) string {
 	}
 }
 
+// Processes the sql.NULLTime that is returned by some endpoints
 func processSQLNullTime(data sql.NullTime) string {
 	if data.Valid {
 		return fmt.Sprintf("%d/%d/%d %d:%d UTC", data.Time.Day(), data.Time.Month(), data.Time.Year(), data.Time.Hour(), data.Time.Minute())
 	} else {
 		return "-"
-	}
-}
-
-func validateTripConsoleOptions(onlyTripAssignment Trip_Assignment_With_Driver_Trip, option string) bool {
-	if onlyTripAssignment.Status == "PENDING" && (option == "3" || option == "4") {
-		return true
-	} else if onlyTripAssignment.Status == "ACCEPTED" && (option == "5") {
-		return true
-	} else if onlyTripAssignment.Status == "DRIVING" && (option == "6") {
-		return true
-	} else {
-		return false
 	}
 }

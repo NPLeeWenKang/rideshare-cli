@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/73012553/208285088-63810daf-d821-41fb-b39f-5f0852b0cc54.png)
+
 # ETI Assignment 1 (Master)
 
 Name: Lee Wen Kang<br />
